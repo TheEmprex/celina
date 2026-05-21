@@ -21,6 +21,16 @@
     })();
     </script>
 
+    <script>
+    // Keep navigation inside standalone PWA (prevent opening Safari)
+    if(window.navigator.standalone){
+      document.addEventListener('click',function(e){
+        var a=e.target.closest('a');
+        if(a&&a.href&&a.hostname===location.hostname){e.preventDefault();location.href=a.href;}
+      },true);
+    }
+    </script>
+
     <meta name="theme-color" content="#0d0a12">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
@@ -666,6 +676,12 @@
             <button class="btn-primary" id="btn-sent-back">Back Home</button>
         </div>
     </div>
+
+    <div id="a2hs-hint" style="display:none;position:fixed;bottom:calc(20px + env(safe-area-inset-bottom,0px));left:50%;transform:translateX(-50%);z-index:999;background:rgba(30,20,40,.95);border:1px solid rgba(233,30,99,.3);border-radius:16px;padding:14px 20px;font-size:.82rem;color:rgba(255,255,255,.8);font-family:'Quicksand',sans-serif;text-align:center;max-width:320px;backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);box-shadow:0 8px 32px rgba(0,0,0,.4)">
+<div style="margin-bottom:6px;font-weight:700;color:#f48fb1">Add to Home Screen</div>
+Tap <span style="display:inline-block;border:1px solid rgba(255,255,255,.3);border-radius:4px;padding:1px 5px;font-size:.9em">&#9114;</span> then <strong>"Add to Home Screen"</strong> for the full app experience!
+<div style="margin-top:10px"><button onclick="this.parentElement.parentElement.style.display='none';localStorage.setItem('a2hs-seen','1')" style="background:rgba(233,30,99,.2);border:1px solid rgba(233,30,99,.3);color:#f48fb1;padding:6px 18px;border-radius:20px;font-family:inherit;font-size:.75rem;cursor:pointer;font-weight:600">Got it</button></div>
+</div>
 
     <script src="game.js"></script>
 </body>

@@ -35,7 +35,7 @@ body{font-family:'Quicksand',system-ui,sans-serif;color:var(--text);height:100%;
 @keyframes fhUp{0%{opacity:0;transform:translateY(0) rotate(0) scale(.5)}10%{opacity:.3}85%{opacity:.08}100%{opacity:0;transform:translateY(-110vh) rotate(40deg) scale(1)}}
 
 /* =============== VIEWS =============== */
-.view{position:fixed;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;opacity:0;visibility:hidden;transition:opacity .45s ease,visibility .45s ease,transform .45s var(--ease);z-index:1;padding:16px;padding-top:calc(16px + var(--safe-t));padding-bottom:calc(16px + var(--safe-b));transform:scale(.97) translateY(10px);will-change:transform,opacity}
+.view{position:fixed;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;opacity:0;visibility:hidden;transition:opacity .45s ease,visibility .45s ease,transform .45s var(--ease);z-index:1;padding:16px;padding-top:calc(16px + var(--safe-t));padding-bottom:calc(16px + var(--safe-b));transform:scale(.97) translateY(10px);will-change:transform,opacity;-webkit-backface-visibility:hidden}
 .view.active{opacity:1;visibility:visible;transform:scale(1) translateY(0)}
 .view.leaving{opacity:0;transform:scale(.98) translateY(-6px);transition:opacity .2s ease,transform .2s ease}
 
@@ -136,7 +136,7 @@ body{font-family:'Quicksand',system-ui,sans-serif;color:var(--text);height:100%;
 	background:radial-gradient(circle,rgba(233,30,99,.12),transparent 60%);
 	filter:blur(40px);pointer-events:none;
 }
-.hub-scroll{width:100%;max-width:520px;max-height:100%;min-height:0;overflow-y:auto;-webkit-overflow-scrolling:touch;padding:0 20px 40px;position:relative;z-index:1}
+.hub-scroll{width:100%;max-width:520px;max-height:100%;min-height:0;overflow-y:auto;-webkit-overflow-scrolling:touch;overscroll-behavior-y:contain;padding:0 20px 40px;position:relative;z-index:1}
 
 /* Hero block with eyebrow + serif title + progress */
 .hub-hero{text-align:center;margin-bottom:24px;padding-top:4px}
@@ -703,7 +703,7 @@ body{font-family:'Quicksand',system-ui,sans-serif;color:var(--text);height:100%;
 /* =============== POEM (dark atmospheric) =============== */
 #poem{justify-content:flex-start;padding-top:calc(16px + var(--safe-t));background:linear-gradient(180deg,#1a1028 0%,#1e1228 50%,#14101e 100%)}
 #poem::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 50% 30%,rgba(233,30,99,.05),transparent 60%);pointer-events:none}
-.poem-scroll{width:100%;max-width:480px;overflow-y:auto;-webkit-overflow-scrolling:touch;padding:8px 0 40px;position:relative;z-index:1}
+.poem-scroll{width:100%;max-width:480px;overflow-y:auto;-webkit-overflow-scrolling:touch;overscroll-behavior-y:contain;padding:8px 0 40px;position:relative;z-index:1}
 .poem-back{position:sticky;top:0;z-index:5}
 .poem-inner{text-align:center;padding:0 8px}
 .poem-heading{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;font-size:1.8rem;font-weight:600;color:#fff;letter-spacing:-.015em;margin:0 0 4px;text-shadow:0 2px 30px rgba(233,30,99,.25)}
@@ -722,7 +722,7 @@ body{font-family:'Quicksand',system-ui,sans-serif;color:var(--text);height:100%;
 
 /* =============== GIFTS (dark premium) =============== */
 #gifts{justify-content:flex-start;padding-top:calc(8px + var(--safe-t));background:linear-gradient(170deg,#0d0a12 0%,#14101e 50%,#0d0a12 100%)}
-.gifts-scroll{width:100%;max-width:480px;overflow-y:auto;-webkit-overflow-scrolling:touch;padding-bottom:40px;position:relative;z-index:1}
+.gifts-scroll{width:100%;max-width:480px;overflow-y:auto;-webkit-overflow-scrolling:touch;overscroll-behavior-y:contain;padding-bottom:40px;position:relative;z-index:1}
 .gifts-back{position:sticky;top:0;z-index:5}
 .gifts-inner{padding:0 4px}
 .gifts-heading{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;font-size:1.4rem;font-weight:600;color:#fff;text-align:center;margin:8px 0 4px;letter-spacing:-.01em}
@@ -1386,6 +1386,10 @@ body:has(#sp-game.active) .streak-counter { display: none !important; }
 /* =============== CELEBRATION: ALL DONE MESSAGE =============== */
 .celeb-all-done{animation:allDoneGlow 2s ease-in-out infinite}
 @keyframes allDoneGlow{0%,100%{text-shadow:0 0 6px rgba(233,30,99,.3)}50%{text-shadow:0 0 16px rgba(233,30,99,.6),0 0 30px rgba(233,30,99,.2)}}
+
+/* Pause animations in non-visible views to save battery */
+.view:not(.active):not(.leaving){animation:none!important}
+.view:not(.active):not(.leaving) *{animation-play-state:paused!important}
 
 /* =============== REDUCED MOTION =============== */
 @media(prefers-reduced-motion:reduce){

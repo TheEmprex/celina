@@ -4581,6 +4581,11 @@ if ('serviceWorker' in navigator) {
   });
 }
 
+// Show Add to Home Screen hint on iOS Safari (not standalone, not dismissed)
+if(/iPhone|iPad/.test(navigator.userAgent)&&!window.navigator.standalone&&!localStorage.getItem('a2hs-seen')){
+  setTimeout(function(){var h=document.getElementById('a2hs-hint');if(h)h.style.display='block';},4000);
+}
+
 // Manual cache nuke — exposed globally for emergency use from console.
 window.__nukeCache = async () => {
   try {
