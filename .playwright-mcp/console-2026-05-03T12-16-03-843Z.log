@@ -1,0 +1,17 @@
+[    2520ms] [VERBOSE] [DOM] Password field is not contained in a form: (More info: https://goo.gl/9p2vKq) %o @ https://celina.62-238-23-110.sslip.io/:0
+[    3861ms] [VERBOSE] [DOM] Password field is not contained in a form: (More info: https://goo.gl/9p2vKq) %o @ https://celina.62-238-23-110.sslip.io/:0
+[    7401ms] ReferenceError: diff is not defined
+    at https://celina.62-238-23-110.sslip.io/game.js:1470:72
+    at NodeList.forEach (<anonymous>)
+    at updateHub (https://celina.62-238-23-110.sslip.io/game.js:1437:45)
+    at HTMLButtonElement.<anonymous> (https://celina.62-238-23-110.sslip.io/game.js:1264:32)
+[   13015ms] [ERROR] Failed to load resource: net::ERR_FAILED @ https://sudokupad.app/api/puzzle/b296qMBJgL:0
+[   13015ms] [WARNING] Puzzle fetch failed, falling back to ID: TypeError: Failed to fetch
+    at openSudokuPadEmbed (https://celina.62-238-23-110.sslip.io/game.js:1802:28)
+    at openGame (https://celina.62-238-23-110.sslip.io/game.js:1719:3)
+    at HTMLDivElement.<anonymous> (https://celina.62-238-23-110.sslip.io/game.js:1304:59) @ https://celina.62-238-23-110.sslip.io/game.js:1806
+[   15735ms] [INFO] Starting app: SudokuPad.app (v0.612.0 ©2020-2023 by Sven) @ https://celina.62-238-23-110.sslip.io/sudokupad.appx/script%EF%B9%96v=0.611.0.js:3420
+[   15741ms] TypeError: Cannot read properties of null (reading 'addEventListener')
+    at P.handleInit (https://celina.62-238-23-110.sslip.io/sudokupad.appx/feature-fog%EF%B9%96v=0.611.0.js:460:15)
+    at async P.init (https://celina.62-238-23-110.sslip.io/sudokupad.appx/feature-fog%EF%B9%96v=0.611.0.js:87:5)
+[   16745ms] [TIMEEND] fetchPuzzle: 1004.60107421875 ms @ https://celina.62-238-23-110.sslip.io/sudokupad.appx/puzzleloader%EF%B9%96v=0.611.0.js:95

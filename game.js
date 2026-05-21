@@ -42,20 +42,12 @@ function notifyPuzzleComplete(weekNum, puzzleName, timeStr) {
 }
 
 function notifyGiftsChosen() {
-  let msg;
-  if(state.giftPath==='necklace'){
-    msg='\uD83D\uDC8E Diamond Necklace\n\nShe wants you to pick a diamond necklace for her!';
-  }else if(state.giftPath==='luxury'){
-    const g=GIFTS[state.selectedGifts[0]];
-    msg=`\u2728 One Luxury Pick\n\n- ${g.name} (${g.brand}) \u2014 $${g.p}${g.d?'\n  '+g.d:''}`;
-  }else{
-    const lines=state.selectedGifts.map(i=>`- ${GIFTS[i].name} (${GIFTS[i].brand}) \u2014 $${GIFTS[i].p}`).join('\n');
-    const total=state.selectedGifts.reduce((s,i)=>s+GIFTS[i].p,0);
-    msg=`\uD83C\uDF81 3 Little Treats\n\n${lines}\n\nTotal: $${total}`;
-  }
+  const r = REWARDS.find(x => x.id === state.giftReward);
+  if (!r) return;
   sendToMaxime(
-    'Celina chose her reward!',
-    `Hey Maxime!\n\nCelina finished all 4 puzzles and chose:\n\n${msg}\n\n\u2014 Ella the cat`
+    'Celina chose her next reward!',
+    `Hey Maxime!\n\nCelina finished all 4 puzzles and chose:\n\n${r.emoji} ${r.name}\n${r.desc}\n\n` +
+    `(She already has the Van Cleef necklace and the cute bag.)\n\n\u2014 Ella the cat`
   );
 }
 
@@ -208,56 +200,28 @@ const PUZZLES = [
   }
 ];
 
-// ============== GIFT DATA ==============
-const GIFTS=[
-  {cat:"Make up",name:"Setting Spray",brand:"One/Size",p:18},
-  {cat:"Skincare",name:"PDRN Pink Collagen Face Masks",brand:"Medicube",p:20},
-  {cat:"Skincare",name:"Rice Jelly Cleanser",brand:"De:maf",p:20},
-  {cat:"Clothing",name:"Panties",brand:"Victoria's Secret",d:"S \u2022 black, pink, red",p:35},
-  {cat:"Skincare",name:"Clinique Toner",brand:"Clinique",p:37},
-  {cat:"Make up",name:"Powder Blush (Candy)",brand:"Dior",p:42},
-  {cat:"Make up",name:"Lip Glow Oil",brand:"Dior",d:"Rose candy or Spicy",p:42},
-  {cat:"Clothing",name:"White Skirt",brand:"Oh Polly",d:"S \u2022 White",p:50},
-  {cat:"Jewelry",name:"Multi Color Bangle",brand:"Kate Spade",p:54},
-  {cat:"Clothing",name:"Sweat Pants",brand:"Garage",d:"S \u2022 Teal, black, or spring grey",p:65},
-  {cat:"Clothing",name:"Cream Top",brand:"Lioness",d:"S",p:69},
-  {cat:"Clothing",name:"White Pants",brand:"Tiger Mist",d:"XXS/XS \u2022 Cream",p:75},
-  {cat:"Jewelry",name:"Rainbow Bangle",brand:"Kate Spade",p:80},
-  {cat:"Clothing",name:"Pajamas",brand:"Victoria's Secret",d:"S \u2022 Light pink / black",p:80},
-  {cat:"Jewelry",name:"Emerald Bangle",brand:"Kate Spade",p:80},
-  {cat:"Clothing",name:"Linen Pants",brand:"SNDYS",d:"S \u2022 black or white",p:93},
-  {cat:"Clothing",name:"Turquoise Flowers Dress",brand:"Capittana",d:"xs/s",p:105},
-  {cat:"Jewelry",name:"Bamboo Bangle",brand:"Anabel Aram",p:120},
-  {cat:"Clothing",name:"Fishtail Polka Dot Dress",brand:"Oh Polly",d:"Size 2 \u2022 Pink Polka Dot",p:135},
-  {cat:"Clothing",name:"Pink Tweed Blazer & Skirt",brand:"Revolve",d:"xs \u2022 Pink",p:156},
-  {cat:"Clothing",name:"Bandage Top",brand:"House of CB",d:"S \u2022 Wine",p:159},
-  {cat:"Jewelry",name:"Idylla Ring",brand:"Swarovski",d:"Size 50/52",p:189},
-  {cat:"Jewelry",name:"Idylla Y Pendant",brand:"Swarovski",p:260},
-  {cat:"Clothing",name:"Beaded Bikini Set",brand:"Bydee",d:"Top L, Bottom S \u2022 Florita",p:238},
-  {cat:"Clothing",name:"Pink Silk Blouse",brand:"Alice + Olivia",d:"S \u2022 English Rose",p:350},
-  {cat:"Clothing",name:"Mermaid Dress",brand:"Alice + Olivia",d:"Size 2",p:417},
-  {cat:"Jewelry",name:"Gold Bangle",brand:"Adriana Orsini",p:475},
-  {cat:"Handbags",name:"Swan Tote Bag & Wallet",brand:"Brahmin",d:"Odette Ombre Melbourne",p:490},
-  {cat:"Accessories",name:"Dior Mirror Bag Charm",brand:"Dior",d:"Pink",p:550},
-  {cat:"Clothing",name:"Maxi Dress",brand:"Loveshackfancy",d:"Size 2 \u2022 Black or white",p:516},
-  {cat:"Clothing",name:"Sunset Glow Dress",brand:"La Fuori",d:"S",p:575},
-  {cat:"Clothing",name:"Pink Metallic Dress",brand:"Self-Portrait",d:"Size 2",p:750},
-  {cat:"Clothing",name:"Embroidered Dress",brand:"La Fuori",d:"S",p:793},
-  {cat:"Clothing",name:"Pink Polka Dot Lace Dress",brand:"Loveshackfancy",d:"Size 2 \u2022 Pink",p:875},
-  {cat:"Clothing",name:"Pink Blazer & Pants Set",brand:"Alice + Olivia",d:"Size 2 \u2022 English Rose",p:880},
-  {cat:"Accessories",name:"Dior Icon Bag Charm",brand:"Dior",d:"Pink",p:950},
-  {cat:"Clothing",name:"Gold Top & Skirt Set",brand:"Revolve",d:"Size 2",p:1120},
-  {cat:"Clothing",name:"Embroidered Mini Dress",brand:"Alice + Olivia",d:"Size 2",p:1195}
+// ==========================================================================
+// REAL SUDOKUPAD PUZZLE URLS — paste one ID per week to use the SudokuPad
+// engine for that week's puzzle. The ID is whatever follows sudokupad.app/
+// in the share link (e.g. "https://sudokupad.app/abc123" → "abc123"), or a
+// full encoded payload starting with "scl…", "ctc…", or "fpuz…".
+//
+// When PUZZLE_URLS[w] is non-empty, that week opens SudokuPad's engine
+// (real solver-grade rendering, drag-select, smart pencil marks) instead of
+// the built-in renderer. Leave blank to fall back to the built-in board.
+// ==========================================================================
+const PUZZLE_URLS = ['celina-w1', 'celina-w2', 'celina-w3', ''];
+// Already received \u2014 locked, ticked, shown at top
+const RECEIVED=[
+  {name:"Van Cleef Necklace",brand:"Van Cleef & Arpels",emoji:"\uD83D\uDC8E"},
+  {name:"Cute Bag",brand:"From Maxime",emoji:"\uD83D\uDC5C"}
 ];
-const SMALL_MAX=120;
-const LUXURY_MAX=500;
+// Tier-based unlocks \u2014 each reward unlocks at a puzzle-count threshold
+const REWARDS=[
+  {id:'vancleef-dia', name:'Diamond White Gold Van Cleef', emoji:'\uD83D\uDC8E', desc:'Unlocks after 3 puzzles solved', threshold:3},
+  {id:'studs',        name:'Stud Earrings',                emoji:'\u2728',       desc:'Unlocks after 4 puzzles solved', threshold:4}
+];
 const PARTY_COLORS=['#e91e63','#FFD700','#FF69B4','#ff6b9d','#f8bbd0','#ce93d8','#fff','#9C27B0','#64b5f6','#ffb74d','#ff4081','#ffeb3b','#81c784'];
-
-const GIFT_PATHS=[
-  {id:'necklace',name:'Diamond Necklace',emoji:'\uD83D\uDC8E',desc:'Maxime picks a diamond necklace just for you'},
-  {id:'luxury',name:'One Luxury Pick',emoji:'\u2728',desc:'Choose one special item'},
-  {id:'treats',name:'3 Little Treats',emoji:'\uD83C\uDF81',desc:'Pick 3 cute things you love'}
-];
 
 const RULES_HTML = {
   "Killer + Thermo + Palindrome": `
@@ -369,16 +333,46 @@ let mistakes = 0, selectedNum = 0, bestTimes = JSON.parse(localStorage.getItem('
 let digitFirstMode = false, lastNumpadTapTime = 0, lastNumpadTapDigit = 0;
 let lastInputTime = Date.now(), ellaIdleTimer = null, ellaAsleep = false;
 let stats = JSON.parse(localStorage.getItem('celina-stats')||'null')||{totalSolves:0,totalTime:0,totalMistakes:0,totalHints:0,bestStreak:0,perfectRuns:0,fastestSolve:Infinity,gamesStarted:0};
+// Backfill new tracking fields for existing saves
+if(typeof stats.taps!=='number')stats.taps=0;
+if(typeof stats.sessions!=='number')stats.sessions=0;
+if(typeof stats.totalMoves!=='number')stats.totalMoves=0;
 function saveStats(){localStorage.setItem('celina-stats',JSON.stringify(stats));}
+// Count this app open as a session
+stats.sessions++; saveStats();
+// Count every tap anywhere in the app shell (puzzle taps come via the iframe bridge)
+document.addEventListener('pointerdown',()=>{stats.taps++;},{passive:true,capture:true});
+// Throttled save of tap count so we don't hammer localStorage
+setInterval(()=>{ try{saveStats();}catch(e){} },5000);
 const MAX_MISTAKES = 5;
 const MAX_HINTS = 3;
+
+// Default progress slot for one week (function decl so it hoists above `let state = loadState()`)
+function _DP(){ return {done:false,at:null,t:0,g:null,n:null,m:0,h:0,hc:null,startedAt:null,lastPlayedAt:null}; }
+
+// Build the seed week list from the hardcoded PUZZLES so first-time users
+// get the original 4 weeks. After that everything lives in state.weeks.
+function _seedWeeks(){
+  return PUZZLES.map((p,i)=>({
+    id: 'w'+i+'-'+Date.now().toString(36),
+    name: p.name,
+    type: p.type,
+    desc: p.desc || '',
+    reward: p.reward || '',
+    emoji: p.emoji || '✨',
+    unlockOffsetDays: i*7,        // week 0 immediate, +7 days each
+    puzzleUrl: PUZZLE_URLS[i] || ''  // pull any pre-set URL too
+  }));
+}
 
 function defaults(){
   return {
     firstVisit: new Date().toISOString(),
-    puzzles:[{done:false,at:null,t:0,g:null,n:null,m:0,h:0,hc:null},{done:false,at:null,t:0,g:null,n:null,m:0,h:0,hc:null},
-             {done:false,at:null,t:0,g:null,n:null,m:0,h:0,hc:null},{done:false,at:null,t:0,g:null,n:null,m:0,h:0,hc:null}],
-    giftsSent:false, selectedGifts:[], giftPath:null
+    weeks: _seedWeeks(),
+    puzzles: Array(4).fill(0).map(_DP),
+    freePlay: { history: [], totalSolved: 0 },
+    admin: { pwHash: null, lastUnlock: 0 },
+    giftsSent:false, giftReward:null
   };
 }
 function loadState(){
@@ -389,20 +383,54 @@ function loadState(){
       if(p.puzzles&&p.puzzles.length>=4){
         const d=defaults();
         if(p.giftsSent===undefined)p.giftsSent=d.giftsSent;
-        if(!Array.isArray(p.selectedGifts))p.selectedGifts=d.selectedGifts;
-        if(p.giftPath===undefined)p.giftPath=d.giftPath;
+        if(p.giftReward===undefined)p.giftReward=d.giftReward;
+        // Drop legacy fields
+        delete p.giftPath; delete p.selectedGifts;
         if(!p.firstVisit)p.firstVisit=d.firstVisit;
-        const dp={done:false,at:null,t:0,g:null,n:null,m:0,h:0,hc:null};
+        // Per-puzzle progress backfill
+        const dp=_DP();
         for(let i=0;i<p.puzzles.length;i++){
           for(const k of Object.keys(dp)){
             if(p.puzzles[i][k]===undefined)p.puzzles[i][k]=dp[k];
           }
         }
+        // Migrate to dynamic weeks if missing
+        if(!Array.isArray(p.weeks) || p.weeks.length===0) p.weeks = _seedWeeks();
+        // Always sync each week's puzzleUrl to the latest hardcoded value.
+        // New builds of PUZZLE_URLS[wi] supersede whatever was previously saved.
+        // Inline the custom-URL check to avoid TDZ on SP_URL_KEY (declared later).
+        for (let _wi = 0; _wi < PUZZLE_URLS.length; _wi++) {
+          if (!p.weeks[_wi] || !PUZZLE_URLS[_wi]) continue;
+          let _custom = '';
+          try { _custom = localStorage.getItem('sp-url-' + _wi) || ''; } catch (_) {}
+          if (p.weeks[_wi].puzzleUrl !== PUZZLE_URLS[_wi] && !_custom) {
+            p.weeks[_wi].puzzleUrl = PUZZLE_URLS[_wi];
+          }
+        }
+        // Make sure puzzles[] is at least as long as weeks[]
+        while(p.puzzles.length < p.weeks.length) p.puzzles.push(_DP());
+        if(!p.freePlay) p.freePlay = { history: [], totalSolved: 0 };
+        if(!Array.isArray(p.freePlay.history)) p.freePlay.history = [];
+        if(typeof p.freePlay.totalSolved !== 'number') p.freePlay.totalSolved = 0;
+        if(!p.admin) p.admin = { pwHash: null, lastUnlock: 0 };
         return p;
       }
     }
   }catch(e){}
   return defaults();
+}
+
+// Get a week by index — prefers dynamic state, falls back to hardcoded PUZZLES
+function getWeek(wi){
+  return (state.weeks && state.weeks[wi]) || PUZZLES[wi];
+}
+// Resolve a week's puzzle URL: localStorage override > week.puzzleUrl > legacy PUZZLE_URLS
+function resolveWeekPuzzleUrl(wi){
+  const custom = getCustomPuzzleUrl(wi);
+  if(custom && custom.trim()) return custom.trim();
+  const w = getWeek(wi);
+  if(w && w.puzzleUrl && w.puzzleUrl.trim()) return w.puzzleUrl.trim();
+  return (PUZZLE_URLS[wi] || '').trim();
 }
 function save(){try{localStorage.setItem('celina-state',JSON.stringify(state));}catch(e){}}
 
@@ -421,9 +449,387 @@ function showView(id){
 
 // ============== INIT ==============
 document.addEventListener('DOMContentLoaded',()=>{
-  initEmail(); initParticleCanvas(); initHearts(); initElla(); initSplash(); initHub(); initBoard(); initPoem(); initGifts();
-  initCardTilt(); initRipples(); initSplashParallax(); initShootingStars(); initMusic();
+  initEmail(); initSplash(); initHub(); initBoard(); initPoem(); initGifts();
+  initRipples(); initMusic(); initFreePlay(); initElla(); initAmbientPurr();
+  initAdmin();
 });
+
+// ============== AMBIENT PURRING ==============
+// Plays a soft purr at random intervals while Celina's on the splash/hub/poem/gifts.
+// Skipped on the puzzle view (would distract from solving).
+function initAmbientPurr(){
+  const onPlayView = () => document.getElementById('sp-game') && document.getElementById('sp-game').classList.contains('active');
+  const tick = () => {
+    if (document.hidden) return scheduleNext();
+    if (onPlayView())   return scheduleNext();
+    try { Audio.purr && Audio.purr(); } catch(e){}
+    // Visual: trigger Ella's purring class briefly so she "feels" it
+    const el = ellaEl(); if (el && el.classList) {
+      el.classList.add('purring');
+      setTimeout(() => el.classList.remove('purring'), 2200);
+    }
+    scheduleNext();
+  };
+  function scheduleNext(){
+    // Random interval between 25 and 70 seconds
+    const next = 25000 + Math.random() * 45000;
+    setTimeout(tick, next);
+  }
+  // First purr after 8-20s so she settles in
+  setTimeout(tick, 8000 + Math.random() * 12000);
+}
+
+// ============== FREE PLAY (secret) ==============
+// Long-press the v2 badge → opens a modal where any SudokuPad URL can be played
+// through this interface. Doesn't track week progress.
+function initFreePlay(){
+  const badge = document.querySelector('.v2-badge');
+  if(badge){
+    let pressTimer=null, fired=false;
+    const start = (e)=>{
+      fired=false;
+      badge.classList.add('pressing');
+      pressTimer = setTimeout(()=>{
+        fired=true;
+        badge.classList.remove('pressing');
+        openFreePlayModal();
+      }, 600);
+    };
+    const cancel = ()=>{
+      badge.classList.remove('pressing');
+      if(pressTimer){clearTimeout(pressTimer);pressTimer=null;}
+    };
+    badge.addEventListener('pointerdown', start);
+    badge.addEventListener('pointerup', cancel);
+    badge.addEventListener('pointerleave', cancel);
+    badge.addEventListener('pointercancel', cancel);
+    // Quick double-tap also opens it (fallback for fussy long-press)
+    let lastTap=0;
+    badge.addEventListener('click', (e)=>{
+      if(fired){e.preventDefault();return;}
+      const now=Date.now();
+      if(now-lastTap<400) openFreePlayModal();
+      lastTap=now;
+    });
+  }
+  const cancelBtn = document.getElementById('btn-freeplay-cancel');
+  if(cancelBtn) cancelBtn.addEventListener('click', closeFreePlayModal);
+  const goBtn = document.getElementById('btn-freeplay-go');
+  if(goBtn) goBtn.addEventListener('click', startFreePlay);
+  const input = document.getElementById('freeplay-input');
+  if(input) input.addEventListener('keydown', (e)=>{ if(e.key==='Enter') startFreePlay(); });
+}
+
+function openFreePlayModal(){
+  const m = document.getElementById('freeplay-modal');
+  if(!m) return;
+  m.style.display = 'flex';
+  const input = document.getElementById('freeplay-input');
+  if(input){ input.value=''; setTimeout(()=>input.focus(), 150); }
+}
+function closeFreePlayModal(){
+  const m = document.getElementById('freeplay-modal');
+  if(m) m.style.display = 'none';
+}
+async function startFreePlay(){
+  const input = document.getElementById('freeplay-input');
+  const raw = (input && input.value || '').trim();
+  if(!raw){ input && input.focus(); return; }
+  closeFreePlayModal();
+  // Reuse the embed launcher — week=-1 marks it as free play (no progress tracking)
+  await openFreePlayEmbed(raw);
+}
+
+// Track the current free-play puzzle so we can log it when solved
+let freeplayCurrent = null;
+
+async function openFreePlayEmbed(urlOrId){
+  const frame = document.getElementById('sp-frame');
+  if(!frame) return;
+  curWeek = -1; // disable week progress tracking for free play
+  showView('sp-game');
+
+  let id = urlOrId;
+  const m = id.match(/sudokupad[^/]*\/(?:sudoku\/|puzzle\/)?(.+?)(?:[?#]|$)/i);
+  if(m) id = m[1];
+
+  freeplayCurrent = { id, raw: urlOrId, startedAt: Date.now() };
+  spStartMs = Date.now();
+
+  const params = new URLSearchParams();
+  params.set('week', '-1');
+  params.set('title', 'Free play');
+  params.set('freeplay', '1');
+
+  if(/^(scl|ctc|fpuz)/i.test(id)){
+    params.set('puzzleid', id);
+  } else {
+    try{
+      const resp = await fetch(`/api/puzzle/${encodeURIComponent(id)}`, { mode:'same-origin' });
+      if(!resp.ok) throw new Error('HTTP '+resp.status);
+      const body = (await resp.text()).trim();
+      params.set('puzzleid', body);
+    } catch(err){
+      console.warn('Free play fetch failed, falling back to ID:', err);
+      params.set('puzzleid', id);
+    }
+  }
+  frame.src = 'play.html?' + params.toString();
+}
+
+// Called by spOnSolved when curWeek === -1
+function spOnFreePlaySolved(elapsedSec, moves){
+  const elapsed = elapsedSec || (freeplayCurrent ? Math.round((Date.now()-freeplayCurrent.startedAt)/1000) : 0);
+  const mv = (typeof moves === 'number' && moves > 0) ? moves : 0;
+  if (mv) { stats.totalMoves += mv; saveStats(); }
+  state.freePlay = state.freePlay || { history: [], totalSolved: 0 };
+  state.freePlay.history.unshift({
+    id: (freeplayCurrent && freeplayCurrent.id) || 'unknown',
+    raw: (freeplayCurrent && freeplayCurrent.raw) || '',
+    elapsedSec: elapsed,
+    moves: mv,
+    solvedAt: Date.now()
+  });
+  // Cap history at 50 entries
+  if(state.freePlay.history.length > 50) state.freePlay.history.length = 50;
+  state.freePlay.totalSolved = (state.freePlay.totalSolved || 0) + 1;
+  save();
+  // Mini celebration: send Maxime a notification + visual
+  try { sendToMaxime('Celina solved a free-play puzzle', `Puzzle: ${freeplayCurrent && freeplayCurrent.id}\nTime: ${fmtTimeLong(elapsed)}\nTotal free-play solves: ${state.freePlay.totalSolved}`); } catch(e){}
+  setTimeout(()=>{ spReturnToHub(); }, 1400);
+}
+
+// =====================================================================
+// ADMIN DASHBOARD
+// =====================================================================
+async function _sha256(str){
+  const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(str));
+  return Array.from(new Uint8Array(buf)).map(b=>b.toString(16).padStart(2,'0')).join('');
+}
+
+let _adminTaps = 0, _adminTapTimer = null, _editingWeekIdx = null;
+
+function initAdmin(){
+  // 4-tap on hub title within 2s opens admin auth
+  const title = document.getElementById('hub-title');
+  if(title){
+    title.addEventListener('click', ()=>{
+      _adminTaps++;
+      clearTimeout(_adminTapTimer);
+      _adminTapTimer = setTimeout(()=>{ _adminTaps = 0; }, 2000);
+      if(_adminTaps >= 4){ _adminTaps = 0; openAdminAuth(); }
+    });
+    // Long-press also works
+    let pt = null;
+    title.addEventListener('pointerdown', ()=>{ pt = setTimeout(openAdminAuth, 1500); });
+    ['pointerup','pointerleave','pointercancel'].forEach(ev=>title.addEventListener(ev, ()=>{ if(pt){clearTimeout(pt);pt=null;}}));
+  }
+  document.getElementById('btn-admin-back').addEventListener('click', ()=>{ showView('hub'); updateHub(); });
+  document.getElementById('btn-admin-add-week').addEventListener('click', ()=>openWeekEdit(null));
+  document.getElementById('btn-admin-export').addEventListener('click', adminExport);
+  document.getElementById('btn-admin-import').addEventListener('click', adminImport);
+  document.getElementById('btn-admin-reset-progress').addEventListener('click', adminResetProgress);
+  document.getElementById('btn-admin-change-pw').addEventListener('click', ()=>openAdminAuth(true));
+  // Auth modal
+  document.getElementById('btn-admin-auth-cancel').addEventListener('click', closeAdminAuth);
+  document.getElementById('btn-admin-auth-go').addEventListener('click', submitAdminAuth);
+  document.getElementById('admin-auth-input').addEventListener('keydown', e=>{ if(e.key==='Enter') submitAdminAuth(); });
+  // Week edit modal
+  document.getElementById('btn-we-cancel').addEventListener('click', ()=>{ document.getElementById('week-edit-modal').style.display='none'; });
+  document.getElementById('btn-we-save').addEventListener('click', saveWeekEdit);
+  document.getElementById('btn-we-delete').addEventListener('click', deleteWeekEdit);
+}
+
+let _adminAuthMode = 'enter'; // 'enter' (existing pw), 'set' (first time), 'change'
+function openAdminAuth(forChange){
+  const m = document.getElementById('admin-auth-modal');
+  const t = document.getElementById('admin-auth-title');
+  const h = document.getElementById('admin-auth-hint');
+  const i = document.getElementById('admin-auth-input');
+  const e = document.getElementById('admin-auth-error');
+  i.value = ''; e.style.display = 'none';
+  if(forChange){
+    _adminAuthMode = 'change';
+    t.textContent = 'Change password';
+    h.textContent = 'Enter a new password';
+  } else if(!state.admin || !state.admin.pwHash){
+    _adminAuthMode = 'set';
+    t.textContent = 'Set admin password';
+    h.textContent = 'First time — pick a password Celina won\'t guess.';
+  } else {
+    _adminAuthMode = 'enter';
+    t.textContent = 'Admin access';
+    h.textContent = 'Enter password';
+  }
+  m.style.display = 'flex';
+  setTimeout(()=>i.focus(), 150);
+}
+function closeAdminAuth(){ document.getElementById('admin-auth-modal').style.display='none'; }
+async function submitAdminAuth(){
+  const i = document.getElementById('admin-auth-input');
+  const e = document.getElementById('admin-auth-error');
+  const v = (i.value || '').trim();
+  if(!v){ i.focus(); return; }
+  const hash = await _sha256(v);
+  if(_adminAuthMode === 'set' || _adminAuthMode === 'change'){
+    state.admin = state.admin || {};
+    state.admin.pwHash = hash;
+    state.admin.lastUnlock = Date.now();
+    save();
+    closeAdminAuth();
+    if(_adminAuthMode === 'change'){
+      showToast && showToast('Password updated', 1500);
+    } else {
+      openAdminView();
+    }
+    return;
+  }
+  // enter mode
+  if(state.admin && state.admin.pwHash === hash){
+    state.admin.lastUnlock = Date.now();
+    save();
+    closeAdminAuth();
+    openAdminView();
+  } else {
+    e.textContent = 'Wrong password';
+    e.style.display = '';
+    i.value = '';
+    i.focus();
+  }
+}
+
+function openAdminView(){
+  renderAdminWeeks();
+  renderAdminFreePlay();
+  showView('admin');
+}
+
+function renderAdminWeeks(){
+  const list = document.getElementById('admin-weeks-list');
+  list.innerHTML = '';
+  (state.weeks || []).forEach((w,i)=>{
+    const done = state.puzzles[i] && state.puzzles[i].done;
+    const hasUrl = !!(w.puzzleUrl || getCustomPuzzleUrl(i));
+    const statusBits = [
+      hasUrl ? '<span class="ok">URL set</span>' : '<span class="warn">no URL</span>',
+      done ? '<span class="ok">✓ done</span>' : '',
+      `unlocks +${w.unlockOffsetDays || 0}d`
+    ].filter(Boolean).join(' · ');
+    const row = document.createElement('div');
+    row.className = 'admin-week-row';
+    row.innerHTML = `
+      <div class="admin-week-num">${i+1}</div>
+      <div class="admin-week-info">
+        <div class="admin-week-name">${_esc(w.name || '(unnamed)')}</div>
+        <div class="admin-week-meta">${statusBits} · ${_esc(w.type || '')}</div>
+      </div>
+      <button class="admin-edit-btn" data-edit="${i}">✎</button>
+    `;
+    row.querySelector('[data-edit]').addEventListener('click', ()=>openWeekEdit(i));
+    list.appendChild(row);
+  });
+}
+
+function renderAdminFreePlay(){
+  const list = document.getElementById('admin-freeplay-list');
+  const hist = (state.freePlay && state.freePlay.history) || [];
+  if(!hist.length){ list.innerHTML = '<p class="admin-empty">No free-play solves yet.</p>'; return; }
+  list.innerHTML = `<p style="font-size:.7rem;color:rgba(255,255,255,.5);margin:0 0 8px">Total: <strong style="color:#fff">${state.freePlay.totalSolved}</strong></p>`;
+  hist.slice(0, 20).forEach(entry=>{
+    const row = document.createElement('div');
+    row.className = 'admin-fp-row';
+    row.innerHTML = `
+      <div class="admin-fp-title" title="${_esc(entry.raw||entry.id)}">${_esc(entry.id)}</div>
+      <div class="admin-fp-time">${fmtTimeLong(entry.elapsedSec || 0)}</div>
+      <div class="admin-fp-when">${relativeAgo(entry.solvedAt)}</div>
+    `;
+    list.appendChild(row);
+  });
+}
+
+function openWeekEdit(idx){
+  _editingWeekIdx = idx; // null = new week
+  const m = document.getElementById('week-edit-modal');
+  const t = document.getElementById('week-edit-title');
+  const w = (idx === null) ? { name:'', type:'', puzzleUrl:'', unlockOffsetDays: (state.weeks||[]).length * 7, reward:'' } : state.weeks[idx];
+  t.textContent = idx === null ? 'Add week' : `Edit week ${idx+1}`;
+  document.getElementById('we-name').value = w.name || '';
+  document.getElementById('we-type').value = w.type || '';
+  document.getElementById('we-url').value = w.puzzleUrl || '';
+  document.getElementById('we-unlock').value = w.unlockOffsetDays || 0;
+  document.getElementById('we-reward').value = w.reward || '';
+  document.getElementById('btn-we-delete').style.display = idx === null ? 'none' : '';
+  m.style.display = 'flex';
+}
+
+function saveWeekEdit(){
+  const w = {
+    id: _editingWeekIdx === null ? 'w'+Date.now().toString(36) : (state.weeks[_editingWeekIdx].id || 'w'+Date.now().toString(36)),
+    name: document.getElementById('we-name').value.trim() || 'Untitled',
+    type: document.getElementById('we-type').value.trim(),
+    puzzleUrl: document.getElementById('we-url').value.trim(),
+    unlockOffsetDays: Math.max(0, parseInt(document.getElementById('we-unlock').value, 10) || 0),
+    reward: document.getElementById('we-reward').value.trim(),
+    emoji: '✨'
+  };
+  if(_editingWeekIdx === null){
+    state.weeks.push(w);
+    state.puzzles.push(_DP());
+  } else {
+    state.weeks[_editingWeekIdx] = Object.assign({}, state.weeks[_editingWeekIdx], w);
+  }
+  save();
+  document.getElementById('week-edit-modal').style.display = 'none';
+  renderAdminWeeks();
+  showToast && showToast('Week saved', 1300);
+}
+
+function deleteWeekEdit(){
+  if(_editingWeekIdx === null) return;
+  if(!confirm(`Delete week ${_editingWeekIdx+1} (${state.weeks[_editingWeekIdx].name})? Progress for that week will be lost.`)) return;
+  state.weeks.splice(_editingWeekIdx, 1);
+  state.puzzles.splice(_editingWeekIdx, 1);
+  save();
+  document.getElementById('week-edit-modal').style.display = 'none';
+  renderAdminWeeks();
+  showToast && showToast('Week deleted', 1300);
+}
+
+function adminExport(){
+  const payload = { state, stats, bestTimes };
+  const blob = new Blob([JSON.stringify(payload, null, 2)], { type: 'application/json' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = 'celina-backup-'+new Date().toISOString().slice(0,10)+'.json';
+  a.click();
+  setTimeout(()=>URL.revokeObjectURL(a.href), 2000);
+}
+function adminImport(){
+  const inp = document.createElement('input');
+  inp.type = 'file'; inp.accept = 'application/json';
+  inp.onchange = async () => {
+    const f = inp.files[0]; if(!f) return;
+    try{
+      const data = JSON.parse(await f.text());
+      if(data.state) localStorage.setItem('celina-state', JSON.stringify(data.state));
+      if(data.stats) localStorage.setItem('celina-stats', JSON.stringify(data.stats));
+      if(data.bestTimes) localStorage.setItem('celina-best', JSON.stringify(data.bestTimes));
+      alert('Imported. Reloading.');
+      location.reload();
+    }catch(e){ alert('Invalid backup file: '+e.message); }
+  };
+  inp.click();
+}
+function adminResetProgress(){
+  if(!confirm('Reset all puzzle progress? Weeks themselves stay; only completion + saved cells are cleared.')) return;
+  state.puzzles = state.weeks.map(_DP);
+  state.giftsSent = false; state.giftReward = null;
+  save();
+  renderAdminWeeks();
+  showToast && showToast('Progress reset', 1500);
+}
+
+function _esc(s){ return String(s||'').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
 
 // ============== FIRST-GAME TIPS ==============
 let tipsShown=JSON.parse(localStorage.getItem('celina-tips')||'{}');
@@ -519,8 +925,11 @@ const ELLA_LINES=[
   "*stretches happily*","Ella is proud of you!","So clever, meow!","The prettiest girl ever!",
   "Maxime's little pink~","L'amour de sa vie!","You make Maxime so happy!","*rolls over for belly rubs*"];
 let ellaTimer=null, blinkInterval=null;
-const ellaEl=()=>document.getElementById('ella-container');
-const ellaSp=()=>document.getElementById('ella-speech');
+// Detached stub so Ella helpers no-op cleanly when the sprite isn't in the DOM.
+const _ELLA_STUB = document.createElement('div');
+_ELLA_STUB._t = 0;
+const ellaEl=()=>document.getElementById('ella-container') || _ELLA_STUB;
+const ellaSp=()=>document.getElementById('ella-speech') || _ELLA_STUB;
 
 function initElla(){
   const el=ellaEl();
@@ -903,13 +1312,18 @@ function getTimeOfDay(){
 
 // ============== HUB ==============
 function initHub(){
-  document.querySelectorAll('.puzzle-card').forEach(card=>{
-    card.addEventListener('click',()=>{
-      const w=+card.dataset.week;
-      const st=puzzleStatus(w);
-      if(st==='available'||st==='completed'||debugMode) openGame(w);
-      else ellaSay("Not yet, meow! Wait for Monday~");
-    });
+  // Render the cards from state.weeks dynamically (admin can add more)
+  renderHubWeeks();
+  // Delegated click handler — works for dynamically-added cards
+  document.getElementById('puzzle-cards').addEventListener('click', (e)=>{
+    const card = e.target.closest('.puzzle-card');
+    if(!card) return;
+    if(card.classList.contains('freeplay-card')){ openFreePlayModal(); return; }
+    const w = +card.dataset.week;
+    if(isNaN(w)) return;
+    const st = puzzleStatus(w);
+    if(st==='available' || st==='completed' || debugMode) openGame(w);
+    else ellaSay("Not yet, meow! Wait for the unlock~");
   });
   // Debug: tap title 7x
   document.getElementById('hub-title').addEventListener('click',()=>{
@@ -935,26 +1349,194 @@ function initHub(){
   document.getElementById('btn-achieve-ok').addEventListener('click',()=>{
     document.getElementById('achieve-modal').style.display='none';
   });
+  // Custom puzzles modal
+  const setupBtn=document.getElementById('btn-setup');
+  if(setupBtn) setupBtn.addEventListener('click',openSetupModal);
+  const setupCancel=document.getElementById('btn-setup-cancel');
+  if(setupCancel) setupCancel.addEventListener('click',()=>{
+    document.getElementById('setup-modal').style.display='none';
+  });
+  const setupSave=document.getElementById('btn-setup-save');
+  if(setupSave) setupSave.addEventListener('click',saveSetupUrls);
+}
+
+// ============== CUSTOM PUZZLE URL SETTER ==============
+const SP_URL_KEY = wi => `sp-url-${wi}`;
+function getCustomPuzzleUrl(wi){
+  try { return localStorage.getItem(SP_URL_KEY(wi)) || ''; } catch (e) { return ''; }
+}
+function resolvePuzzleUrl(wi){
+  const custom = getCustomPuzzleUrl(wi);
+  if (custom && custom.trim()) return custom.trim();
+  const fromConst = (PUZZLE_URLS[wi] || '').trim();
+  return fromConst || '';
+}
+function openSetupModal(){
+  const rows = document.getElementById('setup-rows');
+  rows.innerHTML = '';
+  for (let i = 0; i < 4; i++) {
+    const pz = PUZZLES[i];
+    const row = document.createElement('div');
+    row.className = 'setup-row';
+    row.innerHTML = `
+      <label>Week ${i+1}</label>
+      <input type="text" data-week="${i}"
+             placeholder="paste sudokupad.app/… link or leave blank"
+             value="${getCustomPuzzleUrl(i).replace(/"/g,'&quot;')}">`;
+    rows.appendChild(row);
+  }
+  document.getElementById('setup-modal').style.display = 'flex';
+}
+function saveSetupUrls(){
+  let n = 0;
+  document.querySelectorAll('#setup-rows input[data-week]').forEach(input => {
+    const wi = parseInt(input.dataset.week, 10);
+    const v = input.value.trim();
+    if (v) { localStorage.setItem(SP_URL_KEY(wi), v); n++; }
+    else   { localStorage.removeItem(SP_URL_KEY(wi)); }
+  });
+  document.getElementById('setup-modal').style.display = 'none';
+  showToast && showToast(n ? `Saved ${n} custom puzzle${n>1?'s':''}` : 'Cleared custom puzzles', 1800);
 }
 
 function fmtTime(s){if(s===Infinity||!s)return'--:--';const m=Math.floor(s/60),sec=s%60;return m+':'+(sec<10?'0':'')+sec;}
+function relativeAgo(ts){
+  if(!ts) return '';
+  const sec = Math.max(1, Math.round((Date.now()-ts)/1000));
+  if(sec < 60)        return 'just now';
+  const m = Math.round(sec/60);
+  if(m < 60)          return `${m} min ago`;
+  const h = Math.round(m/60);
+  if(h < 24)          return `${h}h ago`;
+  const d = Math.round(h/24);
+  if(d === 1)         return 'yesterday';
+  if(d < 7)           return `${d}d ago`;
+  return new Date(ts).toLocaleDateString(undefined,{month:'short',day:'numeric'});
+}
+// Compute rich free-play stats from state.freePlay.history
+function computeFreePlayStats(){
+  const fp = (state.freePlay) || { history: [], totalSolved: 0 };
+  const hist = Array.isArray(fp.history) ? fp.history.slice() : [];
+  const times = hist.map(h=>h.elapsedSec).filter(t=>typeof t==='number'&&t>0).sort((a,b)=>a-b);
+  const now = Date.now();
+  const DAY = 86400000;
+  const startOfToday = new Date(); startOfToday.setHours(0,0,0,0);
+  const solvedToday = hist.filter(h=>h.solvedAt>=startOfToday.getTime()).length;
+  const solvedWeek  = hist.filter(h=>h.solvedAt>=now-7*DAY).length;
+  const solvedMonth = hist.filter(h=>h.solvedAt>=now-30*DAY).length;
+  const total = fp.totalSolved || hist.length;
+  const totalTime = times.reduce((a,t)=>a+t,0);
+  const fastest = times.length ? times[0] : 0;
+  const slowest = times.length ? times[times.length-1] : 0;
+  const avg = times.length ? Math.round(totalTime/times.length) : 0;
+  const median = times.length ? times[Math.floor(times.length/2)] : 0;
+  // Distinct days she played
+  const days = new Set(hist.map(h=>{const d=new Date(h.solvedAt);return d.getFullYear()+'-'+d.getMonth()+'-'+d.getDate();}));
+  // Current streak: consecutive days with at least one solve, ending today/yesterday
+  let streak=0; { let cursor=new Date(); cursor.setHours(0,0,0,0);
+    const key=d=>d.getFullYear()+'-'+d.getMonth()+'-'+d.getDate();
+    if(!days.has(key(cursor))) cursor.setTime(cursor.getTime()-DAY);
+    while(days.has(key(cursor))){streak++;cursor.setTime(cursor.getTime()-DAY);}
+  }
+  const lastSolved = hist.length ? Math.max(...hist.map(h=>h.solvedAt)) : 0;
+  const firstSolved = hist.length ? Math.min(...hist.map(h=>h.solvedAt)) : 0;
+  // Move stats (number of digit/pencil actions per puzzle)
+  const moveList = hist.map(h=>h.moves).filter(m=>typeof m==='number'&&m>0);
+  const totalMoves = moveList.reduce((a,m)=>a+m,0);
+  const avgMoves = moveList.length ? Math.round(totalMoves/moveList.length) : 0;
+  const fewestMoves = moveList.length ? Math.min(...moveList) : 0;
+  return {total,totalTime,fastest,slowest,avg,median,solvedToday,solvedWeek,solvedMonth,
+          daysPlayed:days.size,streak,lastSolved,firstSolved,recent:hist.slice(0,10),
+          totalMoves,avgMoves,fewestMoves};
+}
+
 function buildStatsView(){
   const b=document.getElementById('stats-body');
-  b.innerHTML=`<div class="stat-grid">
-    <div class="stat-item"><span class="stat-val">${stats.totalSolves}</span><span class="stat-lbl">Puzzles Solved</span></div>
-    <div class="stat-item"><span class="stat-val">${stats.perfectRuns}</span><span class="stat-lbl">Perfect Runs</span></div>
-    <div class="stat-item"><span class="stat-val">${fmtTime(stats.fastestSolve)}</span><span class="stat-lbl">Fastest Solve</span></div>
-    <div class="stat-item"><span class="stat-val">${stats.bestStreak}x</span><span class="stat-lbl">Best Streak</span></div>
-    <div class="stat-item"><span class="stat-val">${fmtTime(Math.round(stats.totalTime/(stats.totalSolves||1)))}</span><span class="stat-lbl">Avg Time</span></div>
-    <div class="stat-item"><span class="stat-val">${stats.totalHints}</span><span class="stat-lbl">Hints Used</span></div>
-    <div class="stat-item"><span class="stat-val">${stats.totalMistakes}</span><span class="stat-lbl">Total Mistakes</span></div>
-    <div class="stat-item"><span class="stat-val">${stats.gamesStarted}</span><span class="stat-lbl">Games Started</span></div>
-  </div>`;
+  const fp=computeFreePlayStats();
+  b.innerHTML=`
+    <div class="stats-section-title">🧩 Weekly Puzzles</div>
+    <div class="stat-grid">
+      <div class="stat-item"><span class="stat-val">${stats.totalSolves}</span><span class="stat-lbl">Puzzles Solved</span></div>
+      <div class="stat-item"><span class="stat-val">${stats.perfectRuns}</span><span class="stat-lbl">Perfect Runs</span></div>
+      <div class="stat-item"><span class="stat-val">${fmtTime(stats.fastestSolve)}</span><span class="stat-lbl">Fastest Solve</span></div>
+      <div class="stat-item"><span class="stat-val">${stats.bestStreak}x</span><span class="stat-lbl">Best Streak</span></div>
+      <div class="stat-item"><span class="stat-val">${fmtTime(Math.round(stats.totalTime/(stats.totalSolves||1)))}</span><span class="stat-lbl">Avg Time</span></div>
+      <div class="stat-item"><span class="stat-val">${stats.totalHints}</span><span class="stat-lbl">Hints Used</span></div>
+      <div class="stat-item"><span class="stat-val">${stats.totalMistakes}</span><span class="stat-lbl">Total Mistakes</span></div>
+      <div class="stat-item"><span class="stat-val">${stats.gamesStarted}</span><span class="stat-lbl">Games Started</span></div>
+    </div>
+    <div class="stats-section-title">⭐ Free Play</div>
+    <div class="stat-grid">
+      <div class="stat-item"><span class="stat-val">${fp.total}</span><span class="stat-lbl">Total Solved</span></div>
+      <div class="stat-item"><span class="stat-val">${fp.streak}</span><span class="stat-lbl">Day Streak</span></div>
+      <div class="stat-item"><span class="stat-val">${fmtTime(fp.fastest)}</span><span class="stat-lbl">Fastest</span></div>
+      <div class="stat-item"><span class="stat-val">${fmtTime(fp.slowest)}</span><span class="stat-lbl">Slowest</span></div>
+      <div class="stat-item"><span class="stat-val">${fmtTime(fp.avg)}</span><span class="stat-lbl">Average</span></div>
+      <div class="stat-item"><span class="stat-val">${fmtTime(fp.median)}</span><span class="stat-lbl">Median</span></div>
+      <div class="stat-item"><span class="stat-val">${fmtTimeLong(fp.totalTime)}</span><span class="stat-lbl">Total Time</span></div>
+      <div class="stat-item"><span class="stat-val">${fp.daysPlayed}</span><span class="stat-lbl">Days Played</span></div>
+      <div class="stat-item"><span class="stat-val">${fp.solvedToday}</span><span class="stat-lbl">Today</span></div>
+      <div class="stat-item"><span class="stat-val">${fp.solvedWeek}</span><span class="stat-lbl">This Week</span></div>
+      <div class="stat-item"><span class="stat-val">${fp.solvedMonth}</span><span class="stat-lbl">This Month</span></div>
+      <div class="stat-item"><span class="stat-val">${fp.lastSolved?relativeAgo(fp.lastSolved):'—'}</span><span class="stat-lbl">Last Solve</span></div>
+      <div class="stat-item"><span class="stat-val">${fp.totalMoves||0}</span><span class="stat-lbl">Total Moves</span></div>
+      <div class="stat-item"><span class="stat-val">${fp.avgMoves||0}</span><span class="stat-lbl">Avg Moves</span></div>
+      <div class="stat-item"><span class="stat-val">${fp.fewestMoves||0}</span><span class="stat-lbl">Fewest Moves</span></div>
+    </div>
+    <div class="stats-section-title">📊 Lifetime</div>
+    <div class="stat-grid">
+      <div class="stat-item"><span class="stat-val">${(stats.taps||0).toLocaleString()}</span><span class="stat-lbl">Total Taps</span></div>
+      <div class="stat-item"><span class="stat-val">${(stats.totalMoves||0).toLocaleString()}</span><span class="stat-lbl">Total Moves</span></div>
+      <div class="stat-item"><span class="stat-val">${stats.sessions||0}</span><span class="stat-lbl">App Opens</span></div>
+      <div class="stat-item"><span class="stat-val">${fmtTimeLong((stats.totalTime||0)+fp.totalTime)}</span><span class="stat-lbl">Total Play Time</span></div>
+    </div>
+    ${fp.recent.length?`
+    <div class="stats-section-title">🕑 Recent Free Play</div>
+    <div class="fp-recent">
+      ${fp.recent.map(h=>`
+        <div class="fp-recent-row">
+          <span class="fp-recent-id">${_esc((h.id||'puzzle').slice(0,16))}</span>
+          ${h.moves?`<span class="fp-recent-moves">${h.moves} moves</span>`:''}
+          <span class="fp-recent-time">${fmtTime(h.elapsedSec)}</span>
+          <span class="fp-recent-ago">${relativeAgo(h.solvedAt)}</span>
+        </div>`).join('')}
+    </div>`:`
+    <div class="stats-section-title">🕑 Recent Free Play</div>
+    <p class="fp-empty">No free-play puzzles solved yet. Tap Free Play on the menu to start!</p>`}
+  `;
+}
+
+// Rebuild the puzzle cards from state.weeks; preserves the freeplay card at the end.
+function renderHubWeeks(){
+  const container = document.getElementById('puzzle-cards');
+  if(!container) return;
+  const freeplay = document.getElementById('card-freeplay');
+  // Remove existing week cards (everything except freeplay)
+  Array.from(container.querySelectorAll('.puzzle-card')).forEach(c => {
+    if(!c.classList.contains('freeplay-card')) c.remove();
+  });
+  (state.weeks || []).forEach((w,i)=>{
+    const card = document.createElement('div');
+    card.className = 'puzzle-card';
+    card.dataset.week = i;
+    card.innerHTML = `
+      <div class="card-icon-wrap"><span class="card-num">${i+1}</span></div>
+      <div class="card-badge">Week ${i+1}</div>
+      <div class="card-name">${_esc(w.name || 'Untitled')}</div>
+      <div class="card-type">${_esc(w.type || '')}</div>
+      <div class="card-status" id="status-${i}"></div>
+    `;
+    if(freeplay) container.insertBefore(card, freeplay);
+    else container.appendChild(card);
+  });
 }
 
 function updateHub(){
-  const diff=[1,2,3,4]; // difficulty stars per puzzle
+  // Re-render cards in case admin added/removed weeks
+  renderHubWeeks();
   document.querySelectorAll('.puzzle-card').forEach((card,i)=>{
+    // Free play card doesn't track week status — skip the per-week update
+    if(card.classList.contains('freeplay-card')) return;
     const st=debugMode&&!state.puzzles[i].done?'available':puzzleStatus(i);
     // Re-trigger card animation
     card.style.animation='none';void card.offsetHeight;card.style.animation='';
@@ -965,52 +1547,41 @@ function updateHub(){
       se.innerHTML='\u2714 Completed'+(bt?' <span class="best-time">'+fmtTime(bt)+'</span>':'');
     }
     else if(st==='available'){
-      // Show progress if puzzle was started
-      if(state.puzzles[i].g){
-        let filled=0;state.puzzles[i].g.forEach(row=>row.forEach(v=>{if(v>0)filled++;}));
-        const pct=Math.round(filled/81*100);
-        se.innerHTML=pct>0?`In progress <span class="card-pct">${pct}%</span>`:'Play now';
-        if(pct>0) addProgressRing(card,pct);
-      }else se.textContent='Play now';
+      // SudokuPad embed manages its own per-puzzle progress; we just remember
+      // whether she's *touched* the week so the hub reads "In progress" / "Resume"
+      // instead of "Play now" on return.
+      const startedAt = state.puzzles[i].startedAt;
+      const lastPlayed = state.puzzles[i].lastPlayedAt;
+      if (startedAt) {
+        card.classList.add('in-progress');
+        const ago = relativeAgo(lastPlayed || startedAt);
+        se.innerHTML = `Resume <span class="best-time">${ago}</span>`;
+      } else {
+        se.textContent = 'Play now';
+      }
     }
     else{
       const d=unlockDate(i),now=new Date(),days=Math.ceil((d-now)/(864e5));
       se.textContent=`Unlocks in ${days} day${days!==1?'s':''}`;
     }
-    // Difficulty stars
+    // Difficulty stars \u2014 week index + 1, capped at 4 (Week 1 = 1 star, Week 4 = 4 stars)
     let dsEl=card.querySelector('.card-diff');
     if(!dsEl){dsEl=document.createElement('div');dsEl.className='card-diff';card.querySelector('.card-type').after(dsEl);}
-    let stars='';for(let d=0;d<4;d++)stars+=`<span class="diff-star${d<diff[i]?' on':''}">\u2605</span>`;
+    const diffLevel=Math.max(1,Math.min(4,i+1));
+    let stars='';for(let d=0;d<4;d++)stars+=`<span class="diff-star${d<diffLevel?' on':''}">\u2605</span>`;
     dsEl.innerHTML=stars;
   });
   const doneCount=state.puzzles.filter(p=>p.done).length;
-  document.getElementById('btn-gifts').style.display=doneCount>=1?'inline-flex':'none';
-  // Update gift button text based on tier
   const giftBtn=document.getElementById('btn-gifts');
-  if(doneCount>=4) giftBtn.innerHTML=giftBtn.innerHTML.replace(/Choose Your Gifts!|Pick Your Gifts!/,'Choose Your Gifts!');
-  else if(doneCount>=1) giftBtn.innerHTML=giftBtn.innerHTML.replace(/Choose Your Gifts!/,'Pick Your Gifts!');
-  buildGiftTierTracker(doneCount);
-  let hubProg=document.querySelector('.hub-progress');
-  if(!hubProg){
-    hubProg=document.createElement('div');hubProg.className='hub-progress';
-    document.querySelector('.hub-header').appendChild(hubProg);
-  }
-  if(doneCount>0&&doneCount<4){
-    hubProg.innerHTML=`<span class="prog-count">${doneCount}</span> / 4 puzzles completed`;
-  }else if(doneCount===4){
-    hubProg.innerHTML=`<span class="prog-count">All 4</span> puzzles completed! \u2728`;
-  }else{
-    hubProg.textContent='';
-  }
-  // Time-aware hub subtitle
-  const todSubtitles={
-    morning:"A perfect morning for puzzles",
-    afternoon:"Take a break with some puzzles",
-    evening:"Wind down with a puzzle",
-    night:"A quiet night for thinking"
-  };
-  const descEl=document.querySelector('.hub-desc');
-  if(descEl) descEl.textContent=todSubtitles[getTimeOfDay()];
+  if(giftBtn) giftBtn.style.display=doneCount>=1?'inline-flex':'none';
+  // Legacy tier tracker is hidden via CSS but the function expects an element
+  try { buildGiftTierTracker(doneCount); } catch (e) {}
+  // v2 hub progress bar
+  const pf=document.getElementById('hub-progress-fill');
+  const pt=document.getElementById('hub-progress-text');
+  if(pf) pf.style.width=Math.round(doneCount/4*100)+'%';
+  if(pt) pt.textContent=doneCount+' / 4';
+  // Hub desc stays static ("Four puzzles. One reward.")
   // Days since first visit
   const footerEl=document.querySelector('.hub-footer');
   if(footerEl&&state.firstVisit){
@@ -1057,10 +1628,11 @@ function buildGiftTierTracker(doneCount){
   }
 }
 function unlockDate(i){
-  const fv=new Date(state.firstVisit);if(i===0)return fv;
-  const fm=new Date(fv);const dow=fm.getDay();
-  fm.setDate(fm.getDate()+(dow===0?1:dow===1?0:8-dow));fm.setHours(0,0,0,0);
-  return new Date(fm.getTime()+(i-1)*7*864e5);
+  const w = state.weeks && state.weeks[i];
+  const fv = new Date(state.firstVisit);
+  // Dynamic per-week offset (in days) from the first visit
+  const days = (w && typeof w.unlockOffsetDays === 'number') ? w.unlockOffsetDays : i*7;
+  return new Date(fv.getTime() + days * 864e5);
 }
 
 // ============== RULES MODAL ==============
@@ -1243,6 +1815,12 @@ function initBoard(){
 
 function openGame(wi){
   curWeek=wi;
+  // All weeks now route to the SudokuPad engine. Weeks with an empty
+  // PUZZLE_URLS slot show a "coming soon" placeholder inside the embed.
+  openSudokuPadEmbed(wi);
+  return;
+  // (Below is the old built-in renderer path, no longer reachable.)
+  // eslint-disable-next-line
   const pz=PUZZLES[wi];
   // Show rules first time
   const ruleKey='rules-seen-'+wi;
@@ -1285,6 +1863,116 @@ function openGame(wi){
   const lines=isResuming?resumeLines:freshLines;
   setTimeout(()=>ellaSayTypewriter(lines[wi%lines.length]||"Meow!",2500),800);
 }
+
+// ============== SUDOKUPAD EMBED LAUNCHER ==============
+let spStartMs = 0;
+
+async function openSudokuPadEmbed(wi){
+  const pz = getWeek(wi);
+  const urlOrId = resolveWeekPuzzleUrl(wi);
+  const frame = document.getElementById('sp-frame');
+  if (!frame) return;
+  // Mark this week as started so the hub shows "In progress" on return.
+  if (state.puzzles[wi]) {
+    if (!state.puzzles[wi].startedAt) state.puzzles[wi].startedAt = Date.now();
+    state.puzzles[wi].lastPlayedAt = Date.now();
+    save();
+  }
+  spStartMs = Date.now();
+  showView('sp-game');
+  ellaEnterGame && ellaEnterGame();
+  // No artificial delay needed now that .topbar exists for the resize calc.
+
+  const params = new URLSearchParams();
+  params.set('week', String(wi));
+  params.set('title', `Week ${wi+1} — ${pz.name}`);
+
+  if (urlOrId) {
+    // Strip URL down to the puzzle ID (everything after sudokupad.app/)
+    let id = urlOrId.trim();
+    const m = id.match(/sudokupad[^/]*\/(?:sudoku\/|puzzle\/)?(.+?)(?:[?#]|$)/i);
+    if (m) id = m[1];
+
+    // Pass the short ID directly. The SudokuPad bundle has its own fetchPuzzle()
+    // that hits /api/puzzle/<id> — our nginx proxies that to sudokupad.app.
+    // No parent pre-fetch needed; this avoids long URLs and timing races.
+    params.set('puzzleid', id);
+  }
+
+  frame.src = 'play.html?' + params.toString();
+}
+
+function spReturnToHub(){
+  const frame = document.getElementById('sp-frame');
+  if (frame) frame.src = 'about:blank';
+  ellaLeaveGame && ellaLeaveGame();
+  showView('hub');
+  updateHub && updateHub();
+}
+
+function spOnSolved(elapsedSec, moves){
+  // Free play (curWeek === -1): record into the free-play history, no week credit
+  if (curWeek === -1) {
+    spOnFreePlaySolved(elapsedSec, moves);
+    return;
+  }
+  if (typeof moves === 'number' && moves > 0) { stats.totalMoves += moves; saveStats(); }
+  if (curWeek < 0) return;
+  const wi = curWeek;
+  if (state.puzzles[wi].done) return; // already credited
+  const elapsed = elapsedSec || Math.round((Date.now() - spStartMs) / 1000);
+  state.puzzles[wi].done = true;
+  state.puzzles[wi].at = new Date().toISOString();
+  state.puzzles[wi].t = elapsed;
+  state.puzzles[wi].g = null;
+  state.puzzles[wi].m = 0;
+  state.puzzles[wi].h = 0;
+  state.puzzles[wi].n = null;
+  state.puzzles[wi].hc = null;
+  save();
+  stats.totalSolves++;
+  stats.totalTime += elapsed;
+  stats.perfectRuns++;
+  if (elapsed < stats.fastestSolve) stats.fastestSolve = elapsed;
+  saveStats();
+  // Reuse module-scope vars that celebrate() reads
+  // (elapsed/mistakes/hintsUsed are `let` bindings in this same script)
+  // We use a small thunk so the assignment runs in scope.
+  spApplyCompletionState(elapsed);
+  setTimeout(() => {
+    spReturnToHub();
+    setTimeout(() => {
+      try {
+        if (typeof celebrate === 'function') celebrate();
+        notifyPuzzleComplete(wi+1, getWeek(wi).name, fmtTimeLong(elapsed));
+        const doneNow = state.puzzles.filter(p=>p.done).length;
+        const unlocked = REWARDS.find(r => r.threshold === doneNow);
+        if (unlocked) {
+          sendToMaxime(
+            `Celina unlocked: ${unlocked.name}!`,
+            `Hey Maxime!\n\nCelina just solved her ${doneNow}${doneNow===1?'st':doneNow===2?'nd':doneNow===3?'rd':'th'} puzzle and unlocked:\n\n${unlocked.emoji} ${unlocked.name}\n\n— Ella the cat`
+          );
+        }
+      } catch (e) { console.warn(e); }
+    }, 250);
+  }, 1400);
+}
+
+function spApplyCompletionState(elapsedSec){
+  elapsed = elapsedSec;
+  mistakes = 0;
+  hintsUsed = 0;
+}
+
+window.addEventListener('message', (ev) => {
+  const d = ev.data;
+  if (!d || d.source !== 'celina-sudokupad') return;
+  // Fold in taps that happened inside the puzzle iframe
+  if (typeof d.taps === 'number' && d.taps > 0) { stats.taps += d.taps; saveStats(); }
+  if (d.type === 'back')   spReturnToHub();
+  if (d.type === 'solved') spOnSolved(d.elapsedSec, d.moves);
+  // 'ready' currently ignored — we trust the iframe to render
+});
 
 function mk9(fn){return Array.from({length:9},()=>Array.from({length:9},fn));}
 function isGiven(r,c){return PUZZLES[curWeek].givens[r][c]!==0;}
@@ -2783,143 +3471,111 @@ function initGifts(){
   document.getElementById('btn-back-gifts').addEventListener('click',()=>showView('hub'));
   document.getElementById('btn-submit-gifts').addEventListener('click',submitGifts);
   document.getElementById('btn-sent-back').addEventListener('click',()=>{showView('hub');updateHub();});
-  document.querySelectorAll('input[name="gift-path"]').forEach(r=>{
-    r.addEventListener('change',onPathChange);
-  });
-}
-
-function onPathChange(){
-  const path=document.querySelector('input[name="gift-path"]:checked')?.value;
-  if(!path)return;
-  state.giftPath=path;
-  state.selectedGifts=[];
-  save();
-  document.querySelectorAll('.gift-path-card').forEach(c=>{
-    c.classList.toggle('selected',c.dataset.path===path);
-  });
-  buildGiftItems();
 }
 
 function buildGiftList(){
   const doneCount=state.puzzles.filter(p=>p.done).length;
-  const allDone=doneCount>=4;
   const heading=document.querySelector('.gifts-heading');
   const sub=document.querySelector('.gifts-sub');
+  const unlockedCount=REWARDS.filter(r=>doneCount>=r.threshold).length;
   if(heading&&sub){
-    if(allDone){heading.textContent="Your reward, princess!";sub.textContent='All 4 puzzles conquered! Choose one reward below.';}
-    else{heading.textContent="Rewards await!";sub.textContent='Finish all puzzles to unlock your gift.';}
+    if(unlockedCount===REWARDS.length){
+      heading.textContent="All rewards unlocked, princess!";
+      sub.textContent='You earned everything below.';
+    } else if(unlockedCount>0){
+      heading.textContent="Reward unlocked!";
+      sub.textContent='Keep going \u2014 more awaits.';
+    } else {
+      heading.textContent="Rewards await!";
+      const nextR=REWARDS.find(r=>doneCount<r.threshold);
+      sub.textContent=nextR?`${nextR.threshold-doneCount} more puzzle${nextR.threshold-doneCount>1?'s':''} to unlock your first reward.`:'';
+    }
   }
   const lockMsg=document.getElementById('gifts-lock-msg');
-  const pathCards=document.getElementById('gift-paths');
   const submitBtn=document.getElementById('btn-submit-gifts');
-  const list=document.getElementById('gifts-list');
-  if(!allDone){
-    const remaining=4-doneCount;
-    lockMsg.textContent=`Solve ${remaining} more puzzle${remaining>1?'s':''} to unlock your reward!`;
-    lockMsg.style.display='';
-    pathCards.classList.add('locked');
-    submitBtn.style.display='none';
-    list.innerHTML='';
-    return;
-  }
-  lockMsg.style.display='none';
-  pathCards.classList.remove('locked');
-  if(state.giftPath){
-    const radio=document.querySelector(`input[name="gift-path"][value="${state.giftPath}"]`);
-    if(radio)radio.checked=true;
-    document.querySelectorAll('.gift-path-card').forEach(c=>{
-      c.classList.toggle('selected',c.dataset.path===state.giftPath);
-    });
-    buildGiftItems();
-  }else{
-    submitBtn.style.display='none';
-    list.innerHTML='';
-  }
+  const rewardsBlock=document.getElementById('rewards-block');
+
+  buildReceivedList();
+  if(lockMsg) lockMsg.style.display='none';
+  if(submitBtn) submitBtn.style.display='none';
+  if(rewardsBlock) rewardsBlock.classList.remove('locked');
+  buildRewardOptions();
 }
 
-function buildGiftItems(){
-  const list=document.getElementById('gifts-list');
+function buildReceivedList(){
+  const list=document.getElementById('received-list');
+  if(!list)return;
   list.innerHTML='';
-  const submitBtn=document.getElementById('btn-submit-gifts');
-  const path=state.giftPath;
-  if(path==='necklace'){
-    list.innerHTML='<div class="necklace-confirm"><div class="necklace-icon">\uD83D\uDC8E</div><p>Maxime will pick the perfect diamond necklace for you!</p><p class="necklace-sub">Just send your choice and he\'ll handle the rest.</p></div>';
-    submitBtn.style.display='';
-    submitBtn.disabled=false;
-    submitBtn.textContent='Send to Maxime \uD83D\uDC8E';
-    return;
-  }
-  const isLuxury=path==='luxury';
-  const maxPicks=isLuxury?1:3;
-  const items=GIFTS.map((g,i)=>({...g,idx:i})).filter(g=>{
-    if(isLuxury)return g.p>SMALL_MAX&&g.p<=LUXURY_MAX;
-    return g.p<=SMALL_MAX;
-  });
-  const info=document.createElement('div');
-  info.className='gift-pick-info';
-  info.innerHTML=isLuxury?'<p>Pick <strong>1</strong> special item:</p>':'<p>Pick <strong>3</strong> cute things:</p>';
-  list.appendChild(info);
-  items.forEach(g=>{
+  RECEIVED.forEach(item=>{
     const row=document.createElement('div');
-    row.className='gift-row';
-    row.dataset.i=g.idx;
-    const checked=(state.selectedGifts||[]).includes(g.idx);
-    if(checked)row.classList.add('on');
-    row.innerHTML=`<div class="gift-info"><div class="gift-name">${g.name}</div><div class="gift-brand">${g.brand} \u2022 ${g.cat}</div>${g.d?`<div class="gift-detail">${g.d}</div>`:''}</div><div class="gift-price">$${g.p}</div><label class="toggle"><input type="checkbox" data-gi="${g.idx}"${checked?' checked':''}><span class="toggle-track"></span></label>`;
-    row.querySelector('input').addEventListener('change',()=>onGiftToggle(g.idx,maxPicks));
+    row.className='received-row';
+    row.innerHTML=`
+      <div class="received-emoji">${item.emoji}</div>
+      <div class="received-info">
+        <div class="received-name">${item.name}</div>
+        <div class="received-brand">${item.brand}</div>
+      </div>
+      <div class="received-check">\u2713</div>`;
     list.appendChild(row);
   });
-  updateSubmitBtn(maxPicks);
-  initGiftFlip();
 }
 
-function onGiftToggle(idx,maxPicks){
-  const cb=document.querySelector(`input[data-gi="${idx}"]`);
-  if(cb.checked){
-    if(state.selectedGifts.length>=maxPicks){
-      cb.checked=false;
-      showToast(`You can only pick ${maxPicks}!`,1500);
-      return;
-    }
-    state.selectedGifts.push(idx);
-  }else{
-    state.selectedGifts=state.selectedGifts.filter(i=>i!==idx);
-  }
-  document.querySelectorAll('#gifts-list .gift-row').forEach(row=>{
-    const rcb=row.querySelector('input');
-    if(rcb)row.classList.toggle('on',rcb.checked);
+function buildRewardOptions(){
+  const list=document.getElementById('rewards-list');
+  if(!list)return;
+  list.innerHTML='';
+  const doneCount=state.puzzles.filter(p=>p.done).length;
+  REWARDS.forEach(r=>{
+    const unlocked=doneCount>=r.threshold;
+    const row=document.createElement('div');
+    row.className='reward-row'+(unlocked?' on':' tier-locked');
+    row.dataset.id=r.id;
+    const status=unlocked
+      ? '<div class="received-check">✓</div>'
+      : `<div class="tier-lock">🔒 ${r.threshold-doneCount} to go</div>`;
+    row.innerHTML=`
+      <div class="reward-emoji">${r.emoji}</div>
+      <div class="reward-info">
+        <div class="reward-name">${r.name}</div>
+        <div class="reward-desc">${r.desc}</div>
+      </div>
+      ${status}`;
+    list.appendChild(row);
   });
-  save();
-  updateSubmitBtn(maxPicks);
 }
 
-function updateSubmitBtn(maxPicks){
+function onRewardPick(id){
+  state.giftReward=id;
+  save();
+  document.querySelectorAll('#rewards-list .reward-row').forEach(row=>{
+    row.classList.toggle('on',row.dataset.id===id);
+  });
+  updateSubmitBtn();
+}
+
+function updateSubmitBtn(){
   const submitBtn=document.getElementById('btn-submit-gifts');
-  const count=state.selectedGifts.length;
-  submitBtn.style.display='';
-  if(count>=maxPicks){
+  if(state.giftReward){
+    submitBtn.style.display='';
     submitBtn.disabled=false;
     submitBtn.textContent='Send to Maxime';
-  }else{
+  } else {
+    submitBtn.style.display='';
     submitBtn.disabled=true;
-    submitBtn.textContent=`Pick ${maxPicks-count} more`;
+    submitBtn.textContent='Pick one reward';
   }
 }
 
 function submitGifts(){
   const doneCount=state.puzzles.filter(p=>p.done).length;
   if(doneCount<4){ellaSay("Finish all 4 puzzles first!");showToast("Complete all puzzles first!",2500);return;}
-  if(!state.giftPath){ellaSay("Pick a reward first, meow!");return;}
-  if(state.giftPath!=='necklace'&&!state.selectedGifts.length){ellaSay("Pick something, meow!");return;}
+  if(!state.giftReward){ellaSay("Pick a reward first, meow!");return;}
   if(!confirm("Send your choice to Maxime?"))return;
   const submitBtn=document.getElementById('btn-submit-gifts');
   submitBtn.classList.add('btn-submit-gifts-sending');
   submitBtn.textContent='Sending...';
-  const selectedRows=document.querySelectorAll('#gifts-list .gift-row.on');
-  selectedRows.forEach((row,idx)=>{
-    setTimeout(()=>row.classList.add('submit-fly'),idx*60);
-  });
-  const delay=Math.max(selectedRows.length*60+200,400);
+  const pickedRow=document.querySelector('#rewards-list .reward-row.on');
+  if(pickedRow)pickedRow.classList.add('submit-fly');
   setTimeout(()=>{
     const burst=document.createElement('div');
     burst.className='gift-confirm-burst';
@@ -2929,12 +3585,12 @@ function submitGifts(){
       burst.remove();
       submitBtn.classList.remove('btn-submit-gifts-sending');
       submitBtn.textContent='Send to Maxime';
-      selectedRows.forEach(r=>r.classList.remove('submit-fly'));
+      if(pickedRow)pickedRow.classList.remove('submit-fly');
       state.giftsSent=true;save();showView('gift-sent');confetti();Audio.success();
       ellaSay("Maxime will be so happy!!");
       notifyGiftsChosen();
     },700);
-  },delay);
+  },500);
 }
 
 // ============== NUMBER FLY ANIMATION ==============
@@ -3829,28 +4485,6 @@ function updateTimerColor(){
   else if(elapsed>180)timerEl.classList.add('warm');
 }
 
-// ============== GIFT CARD FLIP ==============
-function initGiftFlip(){
-  document.querySelectorAll('#gifts-list .gift-row').forEach(row=>{
-    const cb=row.querySelector('input[type="checkbox"]');
-    if(!cb)return;
-    cb.addEventListener('change',()=>{
-      row.classList.add('flipping');
-      setTimeout(()=>row.classList.remove('flipping'),400);
-      // Highlight shimmer animation
-      row.classList.remove('highlight-on','highlight-off');
-      void row.offsetWidth; // force reflow
-      if(cb.checked){
-        row.classList.add('highlight-on');
-        setTimeout(()=>row.classList.remove('highlight-on'),600);
-      }else{
-        row.classList.add('highlight-off');
-        setTimeout(()=>row.classList.remove('highlight-off'),500);
-      }
-    });
-  });
-}
-
 // ============== VIEW TRANSITION WIPE ==============
 function viewWipe(){
   const wipe=document.createElement('div');
@@ -3912,9 +4546,48 @@ window.addEventListener('beforeunload',()=>{
   if(curWeek>=0&&curPuzzle&&document.getElementById('game').classList.contains('active'))saveProgress();
 });
 
-// ============== SERVICE WORKER ==============
-if('serviceWorker' in navigator){
-  window.addEventListener('load',()=>{
-    navigator.serviceWorker.register('sw.js').catch(()=>{});
+// ============== SERVICE WORKER + AUTO-REFRESH ON UPDATE ==============
+// When a new SW takes control we force a single page reload so the user sees
+// fresh code immediately (otherwise it takes 2 manual reloads).
+if ('serviceWorker' in navigator) {
+  let _reloading = false;
+  navigator.serviceWorker.addEventListener('controllerchange', () => {
+    if (_reloading) return;
+    // Don't double-reload if the page just loaded (e.g., the cache-nuker in
+    // index.html already triggered a reload). performance.timeOrigin gives the
+    // page-load time; if we're <5s old, skip — the new SW will pick up on next visit.
+    if (performance.now() < 5000) return;
+    _reloading = true;
+    location.reload();
+  });
+  window.addEventListener('load', async () => {
+    try {
+      const reg = await navigator.serviceWorker.register('sw.js');
+      // Force an immediate update check so deploys propagate fast
+      reg.update().catch(() => {});
+      // If a new SW is already waiting, ask it to take over now
+      if (reg.waiting) reg.waiting.postMessage({ type: 'SKIP_WAITING' });
+      reg.addEventListener('updatefound', () => {
+        const nw = reg.installing;
+        if (!nw) return;
+        nw.addEventListener('statechange', () => {
+          if (nw.state === 'installed' && navigator.serviceWorker.controller) {
+            // A new SW is installed and the page already had one — promote it now
+            nw.postMessage({ type: 'SKIP_WAITING' });
+          }
+        });
+      });
+    } catch (e) { /* SW unsupported, skip */ }
   });
 }
+
+// Manual cache nuke — exposed globally for emergency use from console.
+window.__nukeCache = async () => {
+  try {
+    const regs = await navigator.serviceWorker.getRegistrations();
+    await Promise.all(regs.map(r => r.unregister()));
+    const ks = await caches.keys();
+    await Promise.all(ks.map(k => caches.delete(k)));
+    location.reload(true);
+  } catch (e) { console.error(e); }
+};

@@ -1,0 +1,7 @@
+[     465ms] [VERBOSE] [DOM] Password field is not contained in a form: (More info: https://goo.gl/9p2vKq) %o @ https://celina.62-238-23-110.sslip.io/?nocache=1:0
+[    1983ms] [VERBOSE] [DOM] Password field is not contained in a form: (More info: https://goo.gl/9p2vKq) %o @ https://celina.62-238-23-110.sslip.io/?nocache=1:0
+[    3905ms] ReferenceError: diff is not defined
+    at https://celina.62-238-23-110.sslip.io/game.js:1470:72
+    at NodeList.forEach (<anonymous>)
+    at updateHub (https://celina.62-238-23-110.sslip.io/game.js:1437:45)
+    at HTMLButtonElement.<anonymous> (https://celina.62-238-23-110.sslip.io/game.js:1264:32)

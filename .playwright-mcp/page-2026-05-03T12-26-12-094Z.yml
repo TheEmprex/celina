@@ -1,0 +1,60 @@
+- generic [active] [ref=e1]:
+  - button "Music" [ref=e2] [cursor=pointer]:
+    - img [ref=e3]
+  - generic:
+    - generic:
+      - button "🎶 Playlist"
+      - button "🎹 Calm"
+  - generic "Ella the cat" [ref=e5]:
+    - img [ref=e6]
+    - generic: Mew! Welcome, Celina!
+  - generic [ref=e71]:
+    - generic [ref=e72]:
+      - generic [ref=e73]: Library
+      - heading "Celina" [level=2] [ref=e74]
+      - paragraph [ref=e75]: Four puzzles. One reward.
+      - generic [ref=e78]: 0 / 4 solved
+    - generic [ref=e79]:
+      - generic [ref=e80] [cursor=pointer]:
+        - generic [ref=e82]: "1"
+        - generic [ref=e83]: Week 1
+        - generic [ref=e84]: Rose Garden
+        - generic [ref=e85]: Killer + Thermo + Palindrome
+        - generic [ref=e86]:
+          - text: Resume
+          - generic [ref=e87]: 10 min ago
+      - generic [ref=e88]:
+        - generic [ref=e90]: "2"
+        - generic [ref=e91]: Week 2
+        - generic [ref=e92]: Pink Sunrise
+        - generic [ref=e93]: Whisper + Anti-Knight/King
+        - generic [ref=e94]: Unlocks in 7 days
+      - generic [ref=e95]:
+        - generic [ref=e97]: "3"
+        - generic [ref=e98]: Week 3
+        - generic [ref=e99]: Starlight
+        - generic [ref=e100]: Kropki + Palindrome + Thermo
+        - generic [ref=e101]: Unlocks in 14 days
+      - generic [ref=e102]:
+        - generic [ref=e104]: "4"
+        - generic [ref=e105]: Week 4
+        - generic [ref=e106]: Eternal Love
+        - generic [ref=e107]: Grand Artisanal Mix
+        - generic [ref=e108]: Unlocks in 21 days
+      - generic [ref=e109] [cursor=pointer]:
+        - img [ref=e111]
+        - generic [ref=e113]: Bonus
+        - generic [ref=e114]: Free play
+        - generic [ref=e115]: Paste any SudokuPad URL
+        - generic [ref=e116]: Open
+    - generic [ref=e117]:
+      - button "Poem" [ref=e118] [cursor=pointer]:
+        - img [ref=e119]
+        - generic [ref=e121]: Poem
+      - button "Stats" [ref=e122] [cursor=pointer]:
+        - img [ref=e123]
+        - generic [ref=e125]: Stats
+      - button "Awards" [ref=e126] [cursor=pointer]:
+        - img [ref=e127]
+        - generic [ref=e129]: Awards
+    - paragraph [ref=e130]: Made with love · For my little pink

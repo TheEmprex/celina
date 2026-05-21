@@ -1,0 +1,19 @@
+- generic [active] [ref=e1]:
+  - button "Music" [ref=e2] [cursor=pointer]:
+    - img [ref=e3]
+  - generic:
+    - generic:
+      - button "🎶 Playlist"
+      - button "🎹 Calm"
+  - generic "Ella the cat" [ref=e5]:
+    - img [ref=e6]
+  - generic [ref=e60]:
+    - generic [ref=e61]: For my little pink
+    - heading "Celina" [level=1] [ref=e62]
+    - paragraph [ref=e64]: By Maxime
+    - paragraph [ref=e65]:
+      - text: To my princess, my baby, my wife,
+      - text: l'amour de ma vie
+    - button "Begin" [ref=e66] [cursor=pointer]:
+      - generic [ref=e67]: Begin
+      - img [ref=e68]

@@ -1,0 +1,915 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<title>Puzzle</title>
+	<meta name="viewport" content="width=device-width,height=device-height,initial-scale=1.0,minimum-scale=1.0,maximum-scale=4.0,user-scalable=yes, minimal-ui">
+	<meta name="apple-mobile-web-app-capable" content="yes">
+	<meta name="mobile-web-app-capable" content="yes">
+	<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+	<meta name="format-detection" content="telephone=no">
+	<link rel="stylesheet" href="sudokupad.appx/style%EF%B9%96v=0.611.0.css">
+	<link rel="stylesheet" href="sudokupad.appx/sudokupad-colors%EF%B9%96v=0.611.0.css">
+	<link rel="stylesheet" href="sudokupad.appx/tool-color%EF%B9%96v=0.611.0.css">
+	<link rel="stylesheet" href="sudokupad.appx/tool-pen%EF%B9%96v=0.611.0.css">
+	<link rel="stylesheet" href="sudokupad.appx/tool-replay%EF%B9%96v=0.611.0.css">
+	<link rel="stylesheet" href="sudokupad.appx/tool-letter%EF%B9%96v=0.611.0.css">
+	<link rel="stylesheet" href="sudokupad.appx/tool-calculator%EF%B9%96v=0.611.0.css">
+	<style>
+		html, body { margin: 0; background: #fff; height: 100%; }
+		body {
+			color: #222;
+			overscroll-behavior: contain;
+		}
+		/* SudokuPad's .app gets the full viewport — we DON'T reserve any space.
+		   Our floating buttons overlay the corners without claiming a strip. */
+
+		/* Pink reskin of SudokuPad's UI */
+		body {
+			--main-color: #e91e63;
+			--inv-color: #fff;
+			--bg-color: #fff;
+			--controls-button-bg: #e91e63;
+			--controls-button-hover-bg: #c2185b;
+			--dm-button-dark: #e91e63;
+		}
+		.controls-input button,
+		#controls button.selected,
+		#controls button.selectedperm,
+		#controls button.selected:hover {
+			background: #e91e63 !important;
+			color: #fff !important;
+			border-color: #c2185b !important;
+		}
+		.controls-input button:hover { background: #c2185b !important; }
+		.controls-aux button {
+			background: #fff !important;
+			color: #c2185b !important;
+			border: 1px solid rgba(233,30,99,.25) !important;
+			border-radius: 12px !important;
+		}
+		.controls-aux button .icon svg { fill: #c2185b !important; }
+
+		/* Hide third-party links / external menu items + native SudokuPad topbar */
+		.topbar,
+		.mdc-drawer, #appmenu,
+		.menu-link-steam, .menu-link-patreon, .menu-link-kofi,
+		.menu-link-youtube, .menu-link-thanks, .menu-link-openalternate,
+		.menu-link-home, .footer #menu-app-version,
+		#sudokupad_openwith, #sudokupad_toplinks, #svenpeek,
+		.controls-footer { display: none !important; }
+
+		/* Dialogs above our bar so clicks reach buttons */
+		.dialog-overlay { z-index: 500 !important; }
+		.dialog button { pointer-events: auto !important; }
+
+		/* Cage labels: 18 SVG units (~⅓ of a 64u cell), bold white halo */
+		#svgrenderer text.cage-label,
+		#svgrenderer .cage-label,
+		#svgrenderer text[class*="cage"],
+		svg .cage-label {
+			font-size: 18px !important;
+			font-weight: 800 !important;
+			paint-order: stroke fill !important;
+			stroke: #fff !important;
+			stroke-width: 4px !important;
+			stroke-linejoin: round !important;
+		}
+
+		/* (Hide block above already covers .topbar/.mdc-drawer/menu-link-* — duplicate removed) */
+		.controls-info { display: none !important; }
+
+		/* Let SudokuPad's native flex layout handle .app/.game/.board/.controls.
+		   Body padding (above) provides the room for our embed bar. */
+
+		/* Floating buttons over SudokuPad — no full-width strip claiming space.
+		   Two floating buttons in the corners; everything else hidden. */
+		.embed-bar {
+			position: fixed;
+			top: env(safe-area-inset-top);
+			left: 0; right: 0;
+			padding: 4px 8px;
+			display: flex; align-items: center; justify-content: space-between;
+			pointer-events: none;
+			z-index: 10000;
+		}
+		.embed-bar > * { pointer-events: auto; }
+		.embed-bar-center { display: none !important; }
+		.embed-bar #embed-rules,
+		.embed-bar #embed-settings { display: none !important; }
+		.embed-btn {
+			width: 44px; height: 44px; border: 0; background: rgba(0,0,0,.05);
+			color: #333; border-radius: 50%; display: flex; align-items: center; justify-content: center;
+			-webkit-tap-highlight-color: transparent;
+			transition: background .15s ease;
+			flex-shrink: 0;
+			touch-action: manipulation;
+			cursor: pointer;
+		}
+		.embed-btn:active { transform: scale(.92); background: rgba(233,30,99,.15); }
+		.embed-btn svg { width: 22px; height: 22px; fill: currentColor; }
+		.embed-bar-center {
+			flex: 1; min-width: 0;
+			display: flex; flex-direction: column; align-items: center; gap: 1px;
+		}
+		.embed-title {
+			font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+			font-size: 14px; font-weight: 600; letter-spacing: -.005em;
+			color: #222; line-height: 1.1;
+			white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+			max-width: 100%;
+		}
+		.embed-timer {
+			font-family: ui-monospace, 'SF Mono', Menlo, monospace;
+			font-size: 12px; font-weight: 500;
+			color: rgba(0,0,0,.5);
+			font-variant-numeric: tabular-nums;
+			line-height: 1.1;
+		}
+		/* (No .app padding — body padding above already provides the room.
+		   Adding both was double-pushing the board past the viewport.) */
+
+		/* Slide-down rules panel — sits in flow under the embed bar */
+		.rules-panel {
+			position: relative;
+			flex: 0 0 auto;
+			z-index: 5;
+			background: #fff;
+			max-height: 0; overflow: hidden;
+			transition: max-height .28s cubic-bezier(.2,.9,.3,1.1), box-shadow .25s ease;
+			border-bottom: 1px solid transparent;
+		}
+		.rules-panel.open {
+			max-height: 50vh; overflow-y: auto;
+			box-shadow: 0 8px 24px rgba(0,0,0,.08);
+			border-bottom-color: rgba(233,30,99,.18);
+		}
+		.rules-content {
+			padding: 14px 22px 18px;
+			font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+			font-size: 13px; line-height: 1.55; color: #333;
+			max-width: 540px; margin: 0 auto;
+		}
+		.rules-content h3 {
+			font-size: 15px; margin: 0 0 8px; color: #c2185b;
+			letter-spacing: .01em; font-weight: 600;
+		}
+		.rules-content p { margin: 0 0 8px; }
+		.rules-content em { color: #c2185b; font-style: normal; font-weight: 500; }
+
+		/* Completion celebration overlay (rendered by parent or by us) */
+		#solved-flash {
+			position: fixed; inset: 0; z-index: 300; display: none;
+			background: radial-gradient(circle at center, rgba(233,30,99,.18), rgba(13,10,18,.92) 70%);
+			align-items: center; justify-content: center;
+			pointer-events: none;
+			animation: solvedFade .6s ease-out;
+		}
+		#solved-flash.show { display: flex; }
+		#solved-flash .heart {
+			font-size: 80px; filter: drop-shadow(0 0 30px rgba(233,30,99,.7));
+			animation: solvedPop .9s cubic-bezier(.2,1.4,.4,1);
+		}
+		@keyframes solvedFade { from { opacity: 0; } to { opacity: 1; } }
+		@keyframes solvedPop {
+			0% { transform: scale(.3); opacity: 0; }
+			60% { transform: scale(1.15); opacity: 1; }
+			100% { transform: scale(1); opacity: 1; }
+		}
+	</style>
+	<link rel="preconnect" href="https://fonts.googleapis.com">
+	<link rel="preconnect" href="https://fonts.gstatic.com">
+	<link href="https://fonts.googleapis.com/css2?family=Lobster&amp;family=Roboto:wght@400;500&amp;display=swap" rel="stylesheet">
+</head>
+<body>
+
+<!-- Custom embed bar: back + title + timer + rules + restart -->
+<div class="embed-bar">
+	<button class="embed-btn" id="embed-back" aria-label="Back">
+		<svg viewBox="0 0 24 24"><path d="M15.41 7.41 14 6l-6 6 6 6 1.41-1.41L10.83 12z"/></svg>
+	</button>
+	<div class="embed-bar-center">
+		<div class="embed-title" id="embed-title"></div>
+		<div class="embed-timer" id="embed-timer">0:00</div>
+	</div>
+	<button class="embed-btn" id="embed-rules" aria-label="Rules" title="Show puzzle rules">
+		<svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm-1-13h2v2h-2zm0 4h2v6h-2z"/></svg>
+	</button>
+	<button class="embed-btn" id="embed-settings" aria-label="Settings" title="Settings">
+		<svg viewBox="0 0 24 24"><path d="M19.43 12.98c.04-.32.07-.64.07-.98s-.03-.66-.07-.98l2.11-1.65a.5.5 0 00.12-.64l-2-3.46a.5.5 0 00-.61-.22l-2.49 1a7.03 7.03 0 00-1.69-.98l-.38-2.65A.488.488 0 0014 2h-4a.488.488 0 00-.49.42l-.38 2.65c-.61.25-1.17.59-1.69.98l-2.49-1a.488.488 0 00-.61.22l-2 3.46c-.13.22-.07.49.12.64L4.57 11c-.04.32-.07.64-.07.98s.03.66.07.98l-2.11 1.65a.5.5 0 00-.12.64l2 3.46c.14.25.43.34.69.22l2.49-1c.52.4 1.08.73 1.69.98l.38 2.65c.04.24.25.42.49.42h4c.24 0 .45-.18.49-.42l.38-2.65c.61-.25 1.17-.59 1.69-.98l2.49 1c.23.09.49 0 .61-.22l2-3.46c.12-.22.07-.49-.12-.64l-2.11-1.65zM12 15.5A3.5 3.5 0 1115.5 12 3.5 3.5 0 0112 15.5z"/></svg>
+	</button>
+	<button class="embed-btn" id="embed-restart" aria-label="Restart" title="Restart puzzle">
+		<svg viewBox="0 0 24 24"><path d="M17.65 6.35A8 8 0 1 0 19.73 14h-2.08A6 6 0 1 1 12 6a5.92 5.92 0 0 1 4.22 1.78L13 11h7V4l-2.35 2.35z"/></svg>
+	</button>
+</div>
+
+<!-- Slide-down rules panel — opens from the (i) button -->
+<div class="rules-panel" id="rules-panel">
+	<div class="rules-content" id="rules-content"></div>
+</div>
+
+<!-- Solved flash overlay (parent gets the postMessage and runs the real celebration) -->
+<div id="solved-flash"><div class="heart">&#10084;&#65039;</div></div>
+
+<!-- Loading skeleton — covers the dark frame while SudokuPad scripts mount -->
+<div id="sp-loading">
+	<div class="sp-loading-board">
+		<div class="sp-grid"></div>
+	</div>
+	<div class="sp-loading-label">Loading puzzle…</div>
+</div>
+<style>
+#sp-loading{
+	position:fixed;inset:0;z-index:150;
+	display:flex;flex-direction:column;align-items:center;justify-content:center;gap:18px;
+	background:#fafafa;
+	transition:opacity .35s ease;
+	pointer-events:none;
+}
+#sp-loading.hide{opacity:0}
+.sp-loading-board{
+	width:min(72vw,320px);aspect-ratio:1;
+	background:#fff;border-radius:8px;
+	padding:8px;
+	box-shadow:0 8px 24px rgba(0,0,0,.10);
+	border:1px solid rgba(0,0,0,.06);
+}
+.sp-grid{
+	width:100%;height:100%;
+	background-image:
+		linear-gradient(to right, rgba(0,0,0,.06) 1px, transparent 1px),
+		linear-gradient(to bottom, rgba(0,0,0,.06) 1px, transparent 1px);
+	background-size:calc(100%/9) calc(100%/9);
+	border:1.5px solid rgba(0,0,0,.18);
+	border-radius:4px;
+	position:relative;
+	overflow:hidden;
+}
+.sp-grid::after{
+	content:'';position:absolute;inset:0;
+	background:linear-gradient(105deg,transparent 40%,rgba(233,30,99,.10) 50%,transparent 60%);
+	animation:sp-shimmer 1.6s ease-in-out infinite;
+}
+@keyframes sp-shimmer{
+	0%{transform:translateX(-100%)}
+	100%{transform:translateX(100%)}
+}
+.sp-loading-label{
+	font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;
+	font-size:.78rem;color:rgba(0,0,0,.45);letter-spacing:.04em;
+}
+</style>
+<script>
+// Hide the skeleton once SudokuPad is up — the bridge fires 'ready' to the parent
+// but we also need to know locally. Poll for Framework.app.
+if (!window.__noPuzzle) {
+	const _hideLoad = () => {
+		const el = document.getElementById('sp-loading');
+		if (el) { el.classList.add('hide'); setTimeout(() => el.remove(), 400); }
+	};
+	const _checkLoad = () => {
+		try {
+			if (window.Framework && Framework.app && Framework.app.puzzle) { _hideLoad(); return true; }
+		} catch (e) {}
+		return false;
+	};
+	const _li = setInterval(() => { if (_checkLoad()) clearInterval(_li); }, 200);
+	// Hard fallback: hide after 8s no matter what
+	setTimeout(() => { clearInterval(_li); _hideLoad(); }, 8000);
+}
+</script>
+
+<!-- Analytics stubs — SudokuPad's bundle expects these even when no GA is loaded -->
+<script>
+window.dataLayer = window.dataLayer || [];
+window.gtag = window.gtag || function(){ window.dataLayer.push(arguments); };
+window.plausible = window.plausible || Object.assign(function(){ (window.plausible.q = window.plausible.q || []).push(arguments); }, { q: [] });
+
+// Pre-set SudokuPad settings before the bundle reads them — kills the
+// "Killer Sudoku" rules popup that appears on every load, and turns on
+// helpful defaults for a top-tier solver.
+(function presetSettings(){
+	try {
+		const KEY = 'svencodes_settings';
+		const cur = JSON.parse(localStorage.getItem(KEY) || '{}');
+		const defaults = {
+			rulealert: false,            // no rules popup on load
+			marksolveddigits: 'true',    // dim solved digits in numpad
+			conflictchecker: 'true',     // catch duplicates as you type
+			checkpencilmarks: true,
+			hidesventoby: true,          // hide the SudokuPad mascot emoji
+			hidesupportlinks: true,
+			hideplayinsudokupad: true,
+			dontpauseonstart: true,      // start the timer immediately, no tap-to-start
+			checkonfinish: true,
+		};
+		// Only fill in what's missing — don't clobber user choices
+		for (const k in defaults) if (cur[k] === undefined) cur[k] = defaults[k];
+		localStorage.setItem(KEY, JSON.stringify(cur));
+	} catch (e) {}
+})();
+</script>
+
+<!-- SudokuPad puzzle patcher (decoder for fpuz / scl / ctc compressed strings) -->
+<script src="sudokupad.appx/puzpatcher.bundle%EF%B9%96v=0.611.0.js"></script>
+
+<!-- Topbar — the bundle measures its bounds during resize. Hidden but must exist. -->
+<div class="topbar" style="display:none;height:0;overflow:hidden;visibility:hidden">
+	<div class="menu"><button class="appmenu" id="appmenubtn"></button></div>
+	<div id="sudokupad_toplinks"></div>
+	<div class="game-clock"></div>
+</div>
+
+<!-- Sven mascot peek element. feature-fog grabs this by ID and addEventListener
+     during init; if missing it throws a null-reference error that aborts the rest
+     of the bundle's initialization, leaving Framework.app.puzzle undefined. -->
+<div id="svenpeek" style="display:none"></div>
+
+<!-- App menu drawer (hidden — appmenu init expects this container) -->
+<aside class="mdc-drawer" id="appmenu" style="display:none">
+	<div class="mdc-drawer-content">
+		<nav class="mdc-list">
+			<div id="appmenuitems"></div>
+			<div class="footer"><div id="menu-app-version"></div></div>
+		</nav>
+	</div>
+</aside>
+
+<!-- SudokuPad app DOM structure (mirrors the official puzzle HTML body) -->
+<div class="app">
+	<div class="game">
+		<div id="board" class="board">
+			<div class="grid">
+				<div class="cells"></div>
+				<svg id="svgrenderer" class="boardsvg" xmlns="http://www.w3.org/2000/svg" version="1.1" draggable="false" style="vector-effect: non-scaling-stroke;">
+					<g class="defs">
+						<defs>
+							<filter id="outlinefilter" class="viewboxsize" x="-25%" y="-25%" width="150%" height="150%" filterUnits="userSpaceOnUse" primitiveUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+								<feMorphology in="SourceGraphic" result="outline" operator="dilate" radius="0.65" />
+								<feColorMatrix values="1000 1000 1000 1000 0 1000 1000 1000 1000 0 1000 1000 1000 1000 0 0 0 0 0.7 0" in="outline" result="outline" />
+								<feBlend in="SourceGraphic" in2="outline" mode="normal" />
+							</filter>
+							<filter id="outlinefilter_dark" class="viewboxsize" x="-25%" y="-25%" width="150%" height="150%" filterUnits="userSpaceOnUse" primitiveUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+								<feMorphology in="SourceGraphic" result="outline" operator="dilate" radius="0.65" />
+								<feColorMatrix values="-1000 -1000 -1000 1000 0 -1000 -1000 -1000 1000 0 -1000 -1000 -1000 1000 0 0 0 0 0.7 0" in="outline" result="outline" />
+								<feBlend in="SourceGraphic" in2="outline" mode="normal" />
+							</filter>
+						</defs>
+					</g>
+					<g id="background"></g>
+					<g id="underlay"></g>
+					<g id="cell-colors"></g>
+					<g id="arrows"></g>
+					<g id="cages"></g>
+					<g id="cell-highlights"></g>
+					<g id="cell-grids"></g>
+					<g id="cell-errors"></g>
+					<g id="overlay"></g>
+					<g id="cell-givens"></g>
+					<g id="cell-pen"></g>
+					<g id="cell-pencilmarks"></g>
+					<g id="cell-candidates"></g>
+					<g id="cell-values"></g>
+				</svg>
+			</div>
+		</div>
+
+		<div id="controls" class="controls">
+			<!-- Scaffolding SudokuPad's init expects (we hide via CSS but the elements must exist) -->
+			<div class="controls-info" style="display: none;">
+				<div class="puzzle-header selectable">
+					<div class="puzzle-title">Puzzle</div>
+					<div class="puzzle-author"></div>
+				</div>
+				<div class="rules-copy"></div>
+				<div class="puzzle-rules selectable"></div>
+			</div>
+			<div class="controls-buttons">
+				<div class="controls-app controls-small"></div>
+				<div class="controls-main tool-normal">
+					<div class="controls-input">
+						<div class="button-row">
+							<button data-control="value" data-key="1" data-value="1" class="digit" title="1">1</button>
+							<button data-control="value" data-key="2" data-value="2" class="digit" title="2">2</button>
+							<button data-control="value" data-key="3" data-value="3" class="digit" title="3">3</button>
+						</div>
+						<div class="button-row">
+							<button data-control="value" data-key="4" data-value="4" class="digit" title="4">4</button>
+							<button data-control="value" data-key="5" data-value="5" class="digit" title="5">5</button>
+							<button data-control="value" data-key="6" data-value="6" class="digit" title="6">6</button>
+						</div>
+						<div class="button-row">
+							<button data-control="value" data-key="7" data-value="7" class="digit" title="7">7</button>
+							<button data-control="value" data-key="8" data-value="8" class="digit" title="8">8</button>
+							<button data-control="value" data-key="9" data-value="9" class="digit" title="9">9</button>
+						</div>
+						<div class="button-row">
+							<button data-control="value" data-key="0" data-value="0" class="digit" title="0">0</button>
+							<button data-control="delete" title="Delete">
+								<div class="icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24"><path d="M0 0h24v24H0V0z" fill="none"/><path d="M22 3H7c-.69 0-1.23.35-1.59.88L0 12l5.41 8.11c.36.53.9.89 1.59.89h15c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H7.07L2.4 12l4.66-7H22v14zm-11.59-2L14 13.41 17.59 17 19 15.59 15.41 12 19 8.41 17.59 7 14 10.59 10.41 7 9 8.41 12.59 12 9 15.59z"/></svg></div>
+							</button>
+						</div>
+					</div>
+					<div class="controls-tool"></div>
+				</div>
+				<div class="controls-aux"></div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<!--
+	Puzzle ID resolution:
+	1. ?puzzleid=<id>      — short ID hosted on sudokupad.app (requires net to fetch)
+	2. ?scl=<payload>      — inline SCL/CTC compressed JSON (offline-friendly)
+	3. ?fpuz=<payload>     — inline f-puzzles compressed payload
+	4. ?ctc=<payload>      — alias for scl
+	The bundle's getPuzzleId() reads ?puzzleid= directly. We rewrite the URL into
+	the form it expects before scripts mount.
+-->
+<script>
+// ===============================================================
+// Puzzle resolution.
+// 1. ?puzzleid / ?scl / ?ctc / ?fpuz from query  → use that
+// 2. Else generate a real classic sudoku via backtracking solver
+//    + cell-removal-with-uniqueness algorithm. Difficulty is set
+//    per week (week 0 easy → week 3 expert). Seeded so the same
+//    week always produces the same puzzle (progress is preserved).
+// ===============================================================
+(function resolvePuzzle() {
+	const q = new URLSearchParams(location.search);
+	const direct = q.get('puzzleid') || q.get('scl') || q.get('ctc') || q.get('fpuz');
+	const title = q.get('title');
+	if (title) {
+		const t = document.getElementById('embed-title');
+		if (t) t.textContent = title;
+		document.title = title;
+	} else {
+		document.title = 'Puzzle';
+	}
+
+	if (direct) {
+		window.puzzleId = direct;
+		return;
+	}
+
+	// Generate a classic sudoku for this week. Yield to the browser so the
+	// loading skeleton paints before the (potentially multi-second) generation.
+	const week = Math.max(0, Math.min(3, parseInt(q.get('week') || '0', 10)));
+	window.__deferBundleLoad = true; // told to wait until generation finishes
+	requestAnimationFrame(() => requestAnimationFrame(() => {
+		try {
+			const fpuz = generateClassicForWeek(week);
+			const compressed = loadFPuzzle.compressPuzzle(JSON.stringify(fpuz));
+			window.puzzleId = 'fpuz' + compressed;
+			window.__usingDemo = true;
+			loadSudokuPadBundle();
+		} catch (e) {
+			console.error('Puzzle generation failed:', e);
+			window.__noPuzzle = true;
+			renderPlaceholder();
+		}
+	}));
+})();
+
+// ============== SUDOKU GENERATOR (pure JS, deterministic) ==============
+// Mulberry32 PRNG — same seed → same sequence.
+function _mulberry32(a) {
+	return function() {
+		let t = a += 0x6D2B79F5;
+		t = Math.imul(t ^ t >>> 15, t | 1);
+		t ^= t + Math.imul(t ^ t >>> 7, t | 61);
+		return ((t ^ t >>> 14) >>> 0) / 4294967296;
+	};
+}
+function _shuffle(arr, rng) {
+	for (let i = arr.length - 1; i > 0; i--) {
+		const j = Math.floor(rng() * (i + 1));
+		[arr[i], arr[j]] = [arr[j], arr[i]];
+	}
+	return arr;
+}
+function _canPlace(g, r, c, v) {
+	for (let i = 0; i < 9; i++) {
+		if (g[r][i] === v || g[i][c] === v) return false;
+		if (g[(r/3|0)*3 + (i/3|0)][(c/3|0)*3 + i%3] === v) return false;
+	}
+	return true;
+}
+// Count solutions (capped at limit). Used to verify uniqueness during cell removal.
+function _countSolutions(g, limit) {
+	let count = 0;
+	function solve() {
+		if (count >= limit) return;
+		let r = -1, c = -1;
+		for (let i = 0; i < 81 && r === -1; i++) {
+			if (g[i/9|0][i%9] === 0) { r = i/9|0; c = i%9; }
+		}
+		if (r === -1) { count++; return; }
+		for (let v = 1; v <= 9; v++) {
+			if (_canPlace(g, r, c, v)) {
+				g[r][c] = v; solve(); g[r][c] = 0;
+				if (count >= limit) return;
+			}
+		}
+	}
+	solve();
+	return count;
+}
+// Build a complete random valid solution by filling diagonal boxes then backtracking.
+function _generateSolution(rng) {
+	const g = Array.from({length: 9}, () => Array(9).fill(0));
+	for (let b = 0; b < 9; b += 3) {
+		const nums = _shuffle([1,2,3,4,5,6,7,8,9], rng);
+		let k = 0;
+		for (let r = b; r < b+3; r++) for (let c = b; c < b+3; c++) g[r][c] = nums[k++];
+	}
+	function fill(idx) {
+		if (idx === 81) return true;
+		const r = idx/9|0, c = idx%9;
+		if (g[r][c] !== 0) return fill(idx + 1);
+		for (const v of _shuffle([1,2,3,4,5,6,7,8,9], rng)) {
+			if (_canPlace(g, r, c, v)) {
+				g[r][c] = v;
+				if (fill(idx + 1)) return true;
+				g[r][c] = 0;
+			}
+		}
+		return false;
+	}
+	fill(0);
+	return g;
+}
+// Remove cells one-by-one while keeping a unique solution. Stops when target reached
+// or no more cells can be removed without breaking uniqueness.
+function _generatePuzzle(targetGivens, seed) {
+	const rng = _mulberry32(seed);
+	const sol = _generateSolution(rng);
+	const puzzle = sol.map(row => row.slice());
+	let givens = 81;
+	for (const pos of _shuffle([...Array(81).keys()], rng)) {
+		if (givens <= targetGivens) break;
+		const r = pos/9|0, c = pos%9;
+		const backup = puzzle[r][c];
+		puzzle[r][c] = 0;
+		const probe = puzzle.map(row => row.slice());
+		if (_countSolutions(probe, 2) === 1) {
+			givens--;
+		} else {
+			puzzle[r][c] = backup;
+		}
+	}
+	return { puzzle, solution: sol };
+}
+// 4-week ladder. Givens count is the standard difficulty proxy.
+// Seeds are fixed so each week always produces the same puzzle.
+const WEEK_CONFIGS = [
+	{ givens: 36, seed: 0xC51E11A, label: 'Warm-up' },     // week 1 — easy/medium
+	{ givens: 28, seed: 0xC51E11B, label: 'Hard' },        // week 2 — hard
+	{ givens: 24, seed: 0xC51E11C, label: 'Very hard' },   // week 3 — very hard
+	{ givens: 22, seed: 0xC51E11D, label: 'Expert' },      // week 4 — expert classic
+];
+function generateClassicForWeek(week) {
+	const cfg = WEEK_CONFIGS[week] || WEEK_CONFIGS[0];
+	const t0 = performance.now();
+	const { puzzle, solution } = _generatePuzzle(cfg.givens, cfg.seed);
+	console.log(`[gen] week=${week} givens=${cfg.givens} took ${(performance.now()-t0).toFixed(0)}ms`);
+	const grid = puzzle.map((row, r) => row.map((v, c) =>
+		v ? { value: v, given: true } : {}
+	));
+	return {
+		size: 9,
+		title: `Week ${week+1} · ${cfg.label}`,
+		author: 'Maxime · for Celina',
+		ruleset: 'Normal sudoku rules apply.',
+		grid,
+		solution: solution.flat().join('')
+	};
+}
+
+// Hard fallback used when generation fails entirely.
+function renderPlaceholder() {
+	const run = () => {
+		const app = document.querySelector('.app');
+		if (app) app.style.display = 'none';
+		const sk = document.getElementById('sp-loading');
+		if (sk) sk.remove();
+		if (document.getElementById('puzzle-placeholder')) return;
+		const ph = document.createElement('div');
+		ph.id = 'puzzle-placeholder';
+		ph.innerHTML = `
+			<div class="ph-card">
+				<div class="ph-emoji">⚠️</div>
+				<h2>Couldn't build the puzzle</h2>
+				<p>Try refreshing the page.</p>
+				<button class="ph-back" id="ph-back">Back</button>
+			</div>`;
+		document.body.appendChild(ph);
+		document.getElementById('ph-back').addEventListener('click', () => {
+			try { window.parent.postMessage({ source: 'celina-sudokupad', type: 'back' }, '*'); } catch (e) {}
+		});
+	};
+	if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', run);
+	else run();
+}
+
+// Bundle loader — explicit so we can call it after async puzzle generation completes.
+const SP_SCRIPTS = [
+	'portableevents', 'utilities', 'framework', 'puzzletools', 'puzzleloader',
+	'rulesparser', 'stegosaur', 'solver', 'controls-app', 'tool-color',
+	'controls-tools', 'tool-pen', 'tool-replay', 'tool-select', 'tool-letter',
+	'tool-calculator', 'feature-conflictchecker', 'feature-marksolveddigits',
+	'feature-showseencells', 'feature-labelrowscols', 'feature-fog',
+	'feature-bgimage', 'feature-fpuz', 'feature-compactmarks',
+	'feature-puzzleevents', 'feature-replaysave', 'feature-uitheme',
+	'feature-cellpaste', 'feature-settingssave', 'feature-customcolors',
+	'feature-emoji', 'feature-rulealert', 'feature-screenshot',
+	'feature-puzzlepack', 'feature-userplugins', 'feature-gridrules',
+	'feature-markup', 'feature-copycells', 'feature-puzzlefont',
+	'feature-layout', 'feature-largepuzzle',
+	'app-settings', 'appmenu', 'script'
+];
+let _bundleLoaded = false;
+function loadSudokuPadBundle() {
+	if (_bundleLoaded) return;
+	_bundleLoaded = true;
+	for (const name of SP_SCRIPTS) {
+		const s = document.createElement('script');
+		s.async = false;
+		s.src = `sudokupad.appx/${name}﹖v=0.611.0.js`;
+		document.head.appendChild(s);
+	}
+	// Patch script: runs after the bundle finishes (s.async=false guarantees order).
+	// SudokuPad's xyToRCExact can be called during init before cells have rendered,
+	// throwing "null.getBoundingClientRect" and aborting loadPuzzle. Wrap it.
+	const patch = document.createElement('script');
+	patch.async = false;
+	patch.textContent = `
+		(function patchAndExpose() {
+			if (typeof App === 'undefined' || !App.prototype.xyToRCExact) {
+				return setTimeout(patchAndExpose, 30);
+			}
+			// Expose Framework/PuzzleLoader on window so our outer scripts can call them
+			try { window.Framework = Framework; } catch(e){}
+			try { window.PuzzleLoader = PuzzleLoader; } catch(e){}
+			try { window.App = App; } catch(e){}
+
+			// (Dialog suppression removed — let SudokuPad show its native
+			// "Resume Puzzle" popup. The user clicks it to start the puzzle.)
+
+			// Patch xyToRCExact to be safe during init
+			const _orig = App.prototype.xyToRCExact;
+			App.prototype.xyToRCExact = function(x, y) {
+				try {
+					const grid = this.grid;
+					const tlCell = grid && grid.getCell && grid.getCell(0, 0);
+					if (!tlCell || !tlCell.elem) return { r: 0, c: 0 };
+					return _orig.call(this, x, y);
+				} catch (e) {
+					return { r: 0, c: 0 };
+				}
+			};
+		})();
+	`;
+	document.head.appendChild(patch);
+}
+</script>
+<style>
+#puzzle-placeholder {
+	position: fixed; inset: 0; z-index: 100;
+	display: flex; align-items: center; justify-content: center;
+	background:
+		radial-gradient(circle at 30% 20%, rgba(233,30,99,.12), transparent 50%),
+		radial-gradient(circle at 80% 80%, rgba(156,39,176,.10), transparent 55%),
+		linear-gradient(160deg, #0d0a12 0%, #14101e 60%, #0d0a12 100%);
+	color: #fff; padding: 20px;
+	font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+}
+.ph-card {
+	max-width: 360px; text-align: center;
+	background: rgba(255,255,255,.04);
+	border: 1.5px solid rgba(255,255,255,.08);
+	border-radius: 20px;
+	padding: 32px 24px;
+	box-shadow: 0 20px 60px rgba(0,0,0,.5), inset 0 1px 0 rgba(255,255,255,.04);
+	backdrop-filter: blur(12px);
+}
+.ph-emoji { font-size: 3rem; margin-bottom: 12px; filter: drop-shadow(0 4px 18px rgba(233,30,99,.35)); }
+.ph-card h2 { margin: 0 0 12px; font-size: 1.35rem; font-weight: 600; letter-spacing: .01em; }
+.ph-card p { margin: 4px 0; color: rgba(255,255,255,.6); font-size: .95rem; line-height: 1.5; }
+.ph-card .ph-sub { color: rgba(255,255,255,.4); font-style: italic; margin-bottom: 22px; }
+.ph-back {
+	background: linear-gradient(135deg, #e91e63, #c2185b);
+	color: #fff; border: 0;
+	padding: 12px 28px; border-radius: 999px;
+	font-size: .95rem; font-weight: 600;
+	cursor: pointer;
+	box-shadow: 0 8px 24px rgba(233,30,99,.35);
+	transition: transform .15s ease;
+}
+.ph-back:active { transform: scale(.96); }
+</style>
+
+<!-- Direct-URL path: load bundle immediately. Generated path defers until after generation. -->
+<script>
+if (!window.__noPuzzle && !window.__deferBundleLoad) {
+	loadSudokuPadBundle();
+}
+</script>
+
+<script>
+// ============== EMBED BRIDGE ==============
+// Listens for puzzle completion, posts a message to the parent window, shows a flash.
+(function embedBridge() {
+	const q = new URLSearchParams(location.search);
+	const week = parseInt(q.get('week') || '0', 10);
+
+	function post(type, extra = {}) {
+		try {
+			window.parent.postMessage(Object.assign({ source: 'celina-sudokupad', type, week }, extra), '*');
+		} catch (e) {}
+	}
+
+	// SudokuPad attaches global touch handlers that preventDefault → on iOS the
+	// synthetic 'click' event never fires on our overlay buttons. Bind to
+	// pointerdown (capture) and stopPropagation so SudokuPad never sees it.
+	function bindTap(el, fn) {
+		if (!el) return;
+		let fired = false;
+		const handler = (e) => {
+			if (fired) return;
+			fired = true;
+			setTimeout(() => { fired = false; }, 400);
+			e.stopPropagation();
+			e.preventDefault();
+			fn(e);
+		};
+		el.addEventListener('pointerdown', handler, { capture: true });
+		el.addEventListener('click', handler, { capture: true });
+	}
+
+	bindTap(document.getElementById('embed-back'), () => { post('back', { taps: puzzleTaps }); puzzleTaps = 0; });
+	bindTap(document.getElementById('embed-restart'), () => {
+		if (!confirm('Restart this puzzle? Progress will be lost.')) return;
+		try {
+			window.Framework && window.Framework.app && window.Framework.app.restart && window.Framework.app.restart();
+		} catch (e) { console.warn('Restart failed:', e); }
+	});
+
+	const settingsBtn = document.getElementById('embed-settings');
+	if (settingsBtn) settingsBtn.addEventListener('click', () => {
+		// Try multiple paths to open the settings dialog
+		try {
+			if (window.Framework && typeof Framework.showSettings === 'function') {
+				Framework.showSettings();
+				return;
+			}
+		} catch (e) { console.warn('Framework.showSettings failed:', e); }
+		// Fallback: click the bundle's own settings button (it lives in the .controls-app stack we hide via CSS)
+		try {
+			const native = document.querySelector('.controls-app button[data-control="settings"], button[data-control="settings"]');
+			if (native) { native.click(); return; }
+		} catch (e) { console.warn('Native settings click failed:', e); }
+		// Last-ditch: dispatch a fake S keypress (SudokuPad's hotkey)
+		try {
+			document.dispatchEvent(new KeyboardEvent('keydown', { key: 's', code: 'KeyS', bubbles: true }));
+		} catch (e) {}
+	});
+
+	// === Rules slide-down panel ===
+	const rulesBtn = document.getElementById('embed-rules');
+	const rulesPanel = document.getElementById('rules-panel');
+	const rulesContent = document.getElementById('rules-content');
+	let rulesLoaded = false;
+	const populateRules = () => {
+		if (rulesLoaded || !rulesContent) return;
+		try {
+			const sp = window.Framework && Framework.app && Framework.app.sourcePuzzle;
+			if (!sp) return;
+			const title = (sp.title || 'Puzzle').replace(/^"|"$/g, '');
+			const author = sp.author ? ` · by ${sp.author}` : '';
+			let rules = sp.ruleset || sp.rules || '';
+			if (Array.isArray(rules)) rules = rules.join('\n\n');
+			rules = String(rules).trim();
+			rulesContent.innerHTML = '<h3>' + escapeHtml(title) + escapeHtml(author) + '</h3>' +
+				rules.split(/\n+/).map(p => '<p>' + escapeHtml(p) + '</p>').join('');
+			rulesLoaded = true;
+		} catch (e) { console.warn('Could not load rules:', e); }
+	};
+	const escapeHtml = s => String(s).replace(/[&<>"']/g, c => ({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;' })[c]);
+	if (rulesBtn && rulesPanel) {
+		rulesBtn.addEventListener('click', () => {
+			populateRules();
+			rulesPanel.classList.toggle('open');
+		});
+	}
+
+	// === Live elapsed timer in the bar ===
+	const timerEl = document.getElementById('embed-timer');
+	if (timerEl) {
+		const t0 = Date.now();
+		const fmt = (ms) => {
+			const s = Math.floor(ms / 1000);
+			const m = Math.floor(s / 60);
+			const h = Math.floor(m / 60);
+			const ss = String(s % 60).padStart(2, '0');
+			const mm = String(m % 60).padStart(2, h ? 2 : 0);
+			return h ? `${h}:${mm}:${ss}` : `${m}:${ss}`;
+		};
+		setInterval(() => { timerEl.textContent = fmt(Date.now() - t0); }, 1000);
+	}
+
+	let solvedFired = false;
+	let startMs = 0;
+
+	// Count every tap inside the puzzle so the parent can fold it into total taps.
+	let puzzleTaps = 0;
+	document.addEventListener('pointerdown', () => { puzzleTaps++; }, { passive: true, capture: true });
+
+	// Read SudokuPad's action log length — the number of moves the solver made.
+	function getMoveCount() {
+		try {
+			const rs = Framework.app.puzzle.replayStack;
+			return Array.isArray(rs) ? rs.length : 0;
+		} catch (e) { return 0; }
+	}
+
+	function fireSolved() {
+		if (solvedFired) return;
+		solvedFired = true;
+		const elapsed = startMs ? Math.round((Date.now() - startMs) / 1000) : 0;
+		const flash = document.getElementById('solved-flash');
+		if (flash) {
+			flash.classList.add('show');
+			setTimeout(() => flash.classList.remove('show'), 2200);
+		}
+		post('solved', { elapsedSec: elapsed, moves: getMoveCount(), taps: puzzleTaps });
+		puzzleTaps = 0;
+	}
+
+	function trySolved() {
+		try {
+			const app = window.Framework && Framework.app;
+			if (!app || !app.puzzle) return false;
+			// Guard: must have been on the puzzle at least 5 seconds (avoids
+			// false positives during the puzzle's load/init phase where empty
+			// cell checks can return "no errors" → isCompleted = true)
+			if (Date.now() - startMs < 5000) return false;
+			// Guard: user must have placed at least one digit
+			const cells = app.puzzle.cells || [];
+			const userTouched = cells.some(c => c && (c.hasProp && (c.hasProp('normal') || c.hasProp('value'))));
+			if (!userTouched) return false;
+			if (typeof app.puzzle.isCompleted === 'function' && app.puzzle.isCompleted()) {
+				fireSolved();
+				return true;
+			}
+		} catch (e) {}
+		return false;
+	}
+
+	function attach() {
+		const app = window.Framework && Framework.app;
+		if (!app || !app.puzzle) return false;
+		startMs = Date.now();
+		// Only listen to events that fire AFTER user input — never on init events
+		// like 'progressloaded' or 'start' which can falsely trigger isCompleted.
+		try {
+			app.puzzle.on && app.puzzle.on('checkresult', trySolved);
+			app.puzzle.on && app.puzzle.on('finish', fireSolved);
+		} catch (e) {}
+		// Soft poll only after a 6s grace period (covers the rare edge case where
+		// the bundle doesn't fire 'finish' on the last cell)
+		setTimeout(() => setInterval(trySolved, 1500), 6000);
+		post('ready');
+		return true;
+	}
+
+	function waitForFramework() {
+		if (attach()) return;
+		setTimeout(waitForFramework, 200);
+	}
+	// Give defer scripts a beat to register the framework
+	setTimeout(waitForFramework, 400);
+})();
+
+// Allow normal interaction (right-click / long-press) — some SudokuPad CSS sets
+// -webkit-touch-callout: none which trips users up.
+(function allowInteraction() {
+	const s = document.createElement('style');
+	s.textContent = `
+		body, .game, .board, .grid, .cells, .controls, .controls-input button {
+			-webkit-touch-callout: default !important;
+			-webkit-tap-highlight-color: rgba(233,30,99,.2) !important;
+		}
+	`;
+	document.head.appendChild(s);
+})();
+
+// Prevent pinch-zoom (matches official SudokuPad pages)
+document.addEventListener('gesturestart', e => { e.preventDefault(); document.body.style.zoom = 0.999999; });
+document.addEventListener('gesturechange', e => { e.preventDefault(); document.body.style.zoom = 0.999999; });
+document.addEventListener('gestureend', e => { e.preventDefault(); document.body.style.zoom = 0.999999; });
+</script>
+
+</body>
+</html>
