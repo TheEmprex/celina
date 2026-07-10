@@ -615,6 +615,21 @@ function loadState(){
           const seeded = _seedWeeks();
           for (let i = p.weeks.length; i < seeded.length; i++) p.weeks.push(seeded[i]);
         }
+        // One-shot: mark weeks 1-4 as completed (Celina finished them before the GH Pages migration).
+        // Guarded by a localStorage flag so it never fires twice.
+        try {
+          if (localStorage.getItem('celina-w1to4-backfill') !== '1') {
+            const backfillDate = new Date('2026-06-30T20:00:00').toISOString();
+            for (let i = 0; i < 4 && i < p.puzzles.length; i++) {
+              if (!p.puzzles[i].done) {
+                p.puzzles[i].done = true;
+                if (!p.puzzles[i].at) p.puzzles[i].at = backfillDate;
+                if (!p.puzzles[i].t)  p.puzzles[i].t  = 1800; // 30 min placeholder
+              }
+            }
+            localStorage.setItem('celina-w1to4-backfill', '1');
+          }
+        } catch (_) {}
         // Always sync each week's puzzleUrl to the latest hardcoded value.
         // New builds of PUZZLE_URLS[wi] supersede whatever was previously saved.
         // Inline the custom-URL check to avoid TDZ on SP_URL_KEY (declared later).
@@ -1924,13 +1939,12 @@ function buildGiftTierTracker(doneCount){
     el.innerHTML='<div class="tier-header">\uD83C\uDF81 All puzzles done! Choose your reward!</div>';
   }
 }
-// Weeks 1-4 (index 0-3): always unlocked (Celina already finished them).
-// Weeks 5+ (index 4+): unlock every Monday starting from the anchor below.
-// The anchor is the next Monday after the migration to GH Pages.
+// Weeks 1-5 (index 0-4): unlocked now (Celina did 1-4; W5 available immediately).
+// Weeks 6+ (index 5+): unlock every Monday starting from the anchor below.
 const SCHEDULE_ANCHOR = new Date('2026-07-13T00:00:00');
 function unlockDate(i){
-  if (i < 4) return new Date(0);
-  return new Date(SCHEDULE_ANCHOR.getTime() + (i - 4) * 7 * 864e5);
+  if (i < 5) return new Date(0);
+  return new Date(SCHEDULE_ANCHOR.getTime() + (i - 5) * 7 * 864e5);
 }
 
 // ============== RULES MODAL ==============

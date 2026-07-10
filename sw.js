@@ -1,4 +1,4 @@
-const CACHE='celina-puzzle-v84-schedule-fix';
+const CACHE='celina-puzzle-v85-w14-done';
 const ASSETS=['./','./index.html','./style.css','./game.js','./play.html','./manifest.json','./favicon.svg','./icon.svg'];
 
 self.addEventListener('install',e=>{
