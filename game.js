@@ -624,21 +624,16 @@ function loadState(){
           const seeded = _seedWeeks();
           for (let i = p.weeks.length; i < seeded.length; i++) p.weeks.push(seeded[i]);
         }
-        // One-shot: mark weeks 1-4 as completed (Celina finished them before the GH Pages migration).
-        // Guarded by a localStorage flag so it never fires twice.
-        try {
-          if (localStorage.getItem('celina-w1to4-backfill') !== '1') {
-            const backfillDate = new Date('2026-06-30T20:00:00').toISOString();
-            for (let i = 0; i < 4 && i < p.puzzles.length; i++) {
-              if (!p.puzzles[i].done) {
-                p.puzzles[i].done = true;
-                if (!p.puzzles[i].at) p.puzzles[i].at = backfillDate;
-                if (!p.puzzles[i].t)  p.puzzles[i].t  = 1800; // 30 min placeholder
-              }
-            }
-            localStorage.setItem('celina-w1to4-backfill', '1');
+        // Always ensure weeks 1-4 are marked done (Celina finished them pre-migration).
+        // Idempotent: only touches puzzles that aren't already done, safe to run on every load.
+        const _backfillDate = new Date('2026-06-30T20:00:00').toISOString();
+        for (let i = 0; i < 4 && i < p.puzzles.length; i++) {
+          if (!p.puzzles[i].done) {
+            p.puzzles[i].done = true;
+            if (!p.puzzles[i].at) p.puzzles[i].at = _backfillDate;
+            if (!p.puzzles[i].t)  p.puzzles[i].t  = 1800;
           }
-        } catch (_) {}
+        }
         // Always sync each week's puzzleUrl to the latest hardcoded value.
         // New builds of PUZZLE_URLS[wi] supersede whatever was previously saved.
         // Inline the custom-URL check to avoid TDZ on SP_URL_KEY (declared later).

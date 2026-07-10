@@ -10,7 +10,7 @@
          exactly once per device, then never runs again. -->
     <script>
     (function nukeStaleCacheOnce(){
-        var FLAG = 'celina-nuked-v88';
+        var FLAG = 'celina-nuked-v89';
         if (localStorage.getItem(FLAG) === '1') return;
         localStorage.setItem(FLAG, '1');
         if (!('serviceWorker' in navigator)) return;
