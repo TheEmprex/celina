@@ -198,11 +198,11 @@ const PUZZLES = [
     dutchWhispers:[[[3,3],[4,3],[5,3],[6,3],[6,2],[5,2]],
       [[5,6],[6,6],[6,5],[7,5],[8,5],[8,6]]]
   },
-  { // Week 5 — Diagonal + Thermometer (SudokuPad-only, scaffolding minimal)
-    name:"Golden Ladder", week:5, type:"Diagonals + Thermometers",
-    desc:"Two diagonals plus grey thermometers. Every rung climbs.",
-    reward:"You've climbed another ladder, ma reine. 💖",
-    emoji:"✨",
+  { // Week 5 — Orbital Whispers + Kropki (easier replacement, ~18 min)
+    name:"Little Orbit", week:5, type:"Whispers + Kropki",
+    desc:"Navy lines whisper wide (differ by 8). Black dots pair 2:1. Gentle waltz.",
+    reward:"You spin the planets, ma reine. 🌙",
+    emoji:"🌙",
     solution:[[0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0],
       [0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0],
       [0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0]],
@@ -1924,12 +1924,13 @@ function buildGiftTierTracker(doneCount){
     el.innerHTML='<div class="tier-header">\uD83C\uDF81 All puzzles done! Choose your reward!</div>';
   }
 }
+// Weeks 1-4 (index 0-3): always unlocked (Celina already finished them).
+// Weeks 5+ (index 4+): unlock every Monday starting from the anchor below.
+// The anchor is the next Monday after the migration to GH Pages.
+const SCHEDULE_ANCHOR = new Date('2026-07-13T00:00:00');
 function unlockDate(i){
-  const w = state.weeks && state.weeks[i];
-  const fv = new Date(state.firstVisit);
-  // Dynamic per-week offset (in days) from the first visit
-  const days = (w && typeof w.unlockOffsetDays === 'number') ? w.unlockOffsetDays : i*7;
-  return new Date(fv.getTime() + days * 864e5);
+  if (i < 4) return new Date(0);
+  return new Date(SCHEDULE_ANCHOR.getTime() + (i - 4) * 7 * 864e5);
 }
 
 // ============== RULES MODAL ==============
