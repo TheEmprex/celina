@@ -580,10 +580,19 @@ function _seedWeeks(){
 }
 
 function defaults(){
+  const puzzles = Array(PUZZLES.length).fill(0).map(_DP);
+  // Celina already completed W1-W4 pre-migration — mark them done in the fresh-state defaults too,
+  // so a brand-new device (like the GH Pages URL) shows the correct progress immediately.
+  const backfillAt = new Date('2026-06-30T20:00:00').toISOString();
+  for (let i = 0; i < 4 && i < puzzles.length; i++) {
+    puzzles[i].done = true;
+    puzzles[i].at = backfillAt;
+    puzzles[i].t = 1800; // 30 min placeholder
+  }
   return {
     firstVisit: new Date().toISOString(),
     weeks: _seedWeeks(),
-    puzzles: Array(PUZZLES.length).fill(0).map(_DP),
+    puzzles,
     freePlay: { history: [], totalSolved: 0 },
     admin: { pwHash: null, lastUnlock: 0 },
     giftsSent:false, giftReward:null
