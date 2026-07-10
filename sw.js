@@ -1,4 +1,4 @@
-const CACHE='celina-puzzle-v86-defaults-done';
+const CACHE='celina-puzzle-v87-prefetch';
 const ASSETS=['./','./index.html','./style.css','./game.js','./play.html','./manifest.json','./favicon.svg','./icon.svg'];
 
 self.addEventListener('install',e=>{

@@ -808,7 +808,7 @@ async function openFreePlayEmbed(urlOrId){
     params.set('puzzleid', id);
   } else {
     try{
-      const resp = await fetch(`/api/puzzle/${encodeURIComponent(id)}`, { mode:'same-origin' });
+      const resp = await fetch(`./api/puzzle/${encodeURIComponent(id)}`, { mode:'same-origin' });
       if(!resp.ok) throw new Error('HTTP '+resp.status);
       const body = (await resp.text()).trim();
       params.set('puzzleid', body);
@@ -2214,10 +2214,23 @@ async function openSudokuPadEmbed(wi){
     const m = id.match(/sudokupad[^/]*\/(?:sudoku\/|puzzle\/)?(.+?)(?:[?#]|$)/i);
     if (m) id = m[1];
 
-    // Pass the short ID directly. The SudokuPad bundle has its own fetchPuzzle()
-    // that hits /api/puzzle/<id> — our nginx proxies that to sudokupad.app.
-    // No parent pre-fetch needed; this avoids long URLs and timing races.
-    params.set('puzzleid', id);
+    // If already an scl/ctc/fpuz blob, pass through as-is.
+    if (/^(scl|ctc|fpuz)/i.test(id)) {
+      params.set('puzzleid', id);
+    } else {
+      // Pre-fetch the puzzle body ourselves so we don't rely on the SudokuPad
+      // bundle's fetchPuzzle (which uses an absolute /api/puzzle/<id> path —
+      // wrong on GitHub Pages since the app is served at a subpath).
+      try {
+        const resp = await fetch(`./api/puzzle/${encodeURIComponent(id)}`, { mode: 'same-origin' });
+        if (!resp.ok) throw new Error('HTTP ' + resp.status);
+        const body = (await resp.text()).trim();
+        params.set('puzzleid', body || id);
+      } catch (err) {
+        console.warn('Pre-fetch failed, falling back to ID:', err);
+        params.set('puzzleid', id);
+      }
+    }
   }
 
   frame.src = 'play.html?' + params.toString();
