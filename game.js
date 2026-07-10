@@ -1881,9 +1881,11 @@ function updateHub(){
       }
     }
     else{
-      const d=unlockDate(i),now=new Date(),days=Math.ceil((d-now)/(864e5));
-      se.textContent=`Unlocks in ${days} day${days!==1?'s':''}`;
+      // Locked: hide the card entirely (Celina sees only unlocked/completed puzzles).
+      card.style.display='none';
+      return;
     }
+    card.style.display='';
     // Difficulty stars \u2014 week index + 1, capped at 4 (Week 1 = 1 star, Week 4 = 4 stars)
     let dsEl=card.querySelector('.card-diff');
     if(!dsEl){dsEl=document.createElement('div');dsEl.className='card-diff';card.querySelector('.card-type').after(dsEl);}
