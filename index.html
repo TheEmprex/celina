@@ -10,7 +10,7 @@
          exactly once per device, then never runs again. -->
     <script>
     (function nukeStaleCacheOnce(){
-        var FLAG = 'celina-nuked-v77';
+        var FLAG = 'celina-nuked-v83';
         if (localStorage.getItem(FLAG) === '1') return;
         localStorage.setItem(FLAG, '1');
         if (!('serviceWorker' in navigator)) return;
@@ -68,6 +68,40 @@
             <p>Please enable JavaScript to play Celina's Puzzle Garden.</p>
         </div>
     </noscript>
+
+    <!-- iOS "Add to Home Screen" install hint — only shows in Safari, not when already installed -->
+    <div id="ios-install" class="ios-install" style="display:none">
+        <div class="ios-install-icon">💎</div>
+        <div class="ios-install-text">
+            <strong>Get the Celina app</strong>
+            <span>Tap <svg viewBox="0 0 24 24" class="ios-share-ico"><path d="M12 2l4 4-1.4 1.4L13 5.8V15h-2V5.8L9.4 7.4 8 6l4-4zM5 12h2v7h10v-7h2v7a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2v-7z" fill="currentColor"/></svg> then <strong>Add to Home Screen</strong></span>
+        </div>
+        <button id="ios-install-x" class="ios-install-x" aria-label="Dismiss">✕</button>
+    </div>
+    <script>
+    (function iosInstallHint(){
+        var ua = navigator.userAgent || '';
+        var isIOS = /iphone|ipad|ipod/i.test(ua) ||
+                    (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+        var isStandalone = window.navigator.standalone === true ||
+                           window.matchMedia('(display-mode: standalone)').matches;
+        if (!isIOS || isStandalone) return;
+        if (localStorage.getItem('celina-ios-install-dismissed') === '1') return;
+        function show(){
+            var b = document.getElementById('ios-install');
+            if (!b) return;
+            b.style.display = 'flex';
+            var x = document.getElementById('ios-install-x');
+            if (x) x.addEventListener('click', function(){
+                b.style.display = 'none';
+                try { localStorage.setItem('celina-ios-install-dismissed','1'); } catch(e){}
+            });
+        }
+        if (document.readyState === 'loading')
+            document.addEventListener('DOMContentLoaded', show);
+        else show();
+    })();
+    </script>
 
     <!-- Music Player -->
     <button class="music-toggle" id="music-toggle" aria-label="Music">
@@ -235,10 +269,10 @@
             <div class="hub-hero">
                 <div class="hub-eyebrow">Library</div>
                 <h2 class="hub-title" id="hub-title">Celina</h2>
-                <p class="hub-desc">Four puzzles. One reward.</p>
+                <p class="hub-desc">A puzzle a week. Every one, a treasure.</p>
                 <div class="hub-progress">
                     <div class="progress-track"><div class="progress-fill" id="hub-progress-fill"></div></div>
-                    <div class="progress-label"><span id="hub-progress-text">0 / 4</span> solved</div>
+                    <div class="progress-label"><span id="hub-progress-text">0 / 26</span> solved</div>
                 </div>
             </div>
 
@@ -334,6 +368,11 @@
             <section class="admin-section">
                 <h3>Free play history</h3>
                 <div id="admin-freeplay-list"><p class="admin-empty">No free-play solves yet.</p></div>
+            </section>
+
+            <section class="admin-section">
+                <h3>💌 Wishlist insights</h3>
+                <div id="admin-wishlist"><p class="admin-empty">No wishes yet.</p></div>
             </section>
 
             <section class="admin-section">
@@ -444,6 +483,26 @@
             <div class="modal-header"><h3>Your Stats</h3></div>
             <div class="modal-body" id="stats-body"></div>
             <button class="btn-primary" id="btn-stats-ok">Close</button>
+        </div>
+    </div>
+
+    <!-- ==================== WISH MODAL (shown after each solve) ==================== -->
+    <div id="wish-modal" class="modal-overlay" style="display:none">
+        <div class="modal-card">
+            <div class="modal-header">
+                <div class="wish-eyebrow">Puzzle solved 🌸</div>
+                <h3>Leave a wish for Maxime</h3>
+                <p class="wish-sub">What kind of surprise would make you smile?</p>
+            </div>
+            <div class="wish-grid" id="wish-grid"></div>
+            <div class="wish-hint">
+                <label>Any hint? (optional)</label>
+                <input type="text" id="wish-note" placeholder="e.g. anything Van Cleef, dark chocolate…" maxlength="140">
+            </div>
+            <div class="wish-actions">
+                <button class="btn-secondary" id="btn-wish-skip">Not this time</button>
+                <button class="btn-primary" id="btn-wish-send" disabled>Send 💌</button>
+            </div>
         </div>
     </div>
 

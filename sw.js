@@ -1,4 +1,4 @@
-const CACHE='celina-puzzle-v78-ios';
+const CACHE='celina-puzzle-v83-wish-dashboard';
 const ASSETS=['./','./index.html','./style.css','./game.js','./play.html','./manifest.json','./favicon.svg','./icon.svg'];
 
 self.addEventListener('install',e=>{

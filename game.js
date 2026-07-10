@@ -36,7 +36,7 @@ function notifyPuzzleComplete(weekNum, puzzleName, timeStr) {
   sendToMaxime(
     `Celina completed Week ${weekNum}: ${puzzleName}!`,
     `Hey Maxime!\n\nCelina just completed Week ${weekNum} (${puzzleName}) in ${timeStr}.\n\n` +
-    `${state.puzzles.filter(p => p.done).length}/4 puzzles completed so far.\n\n` +
+    `${state.puzzles.filter(p => p.done).length}/${(state.weeks||PUZZLES).length} puzzles completed so far.\n\n` +
     `— Ella the cat`
   );
 }
@@ -197,6 +197,209 @@ const PUZZLES = [
     renbans:[[[0,0],[0,1],[0,2],[1,2],[1,1]],[[0,1],[1,1],[1,2],[1,3],[2,3]]],
     dutchWhispers:[[[3,3],[4,3],[5,3],[6,3],[6,2],[5,2]],
       [[5,6],[6,6],[6,5],[7,5],[8,5],[8,6]]]
+  },
+  { // Week 5 — Diagonal + Thermometer (SudokuPad-only, scaffolding minimal)
+    name:"Golden Ladder", week:5, type:"Diagonals + Thermometers",
+    desc:"Two diagonals plus grey thermometers. Every rung climbs.",
+    reward:"You've climbed another ladder, ma reine. 💖",
+    emoji:"✨",
+    solution:[[0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0],
+      [0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0],
+      [0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0]],
+    givens:[[0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0],
+      [0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0],
+      [0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0]],
+    cages:[], thermos:[], arrows:[], whispers:[], kropki:[],
+    palindromes:[], renbans:[], dutchWhispers:[]
+  },
+  { // Week 6 — German whispers + Biased entropic lines
+    name:"Whispered Petals", week:6, type:"German Whispers + Entropic",
+    desc:"Green whispers and beige entropic lines. Soft rules, sharp deductions.",
+    reward:"You listen to every whisper, mon amour. 🌸",
+    emoji:"🌸",
+    solution:mk9(()=>0), givens:mk9(()=>0),
+    cages:[], thermos:[], arrows:[], whispers:[], kropki:[],
+    palindromes:[], renbans:[], dutchWhispers:[]
+  },
+  { // Week 7 — Little Thermometers (SVS #454)
+    name:"Rising Kisses", week:7, type:"Little Thermometers",
+    desc:"Clues outside the grid — every thermometer starts closest to its clue.",
+    reward:"Every climb, a kiss. 💕",
+    emoji:"💕",
+    solution:mk9(()=>0), givens:mk9(()=>0),
+    cages:[], thermos:[], arrows:[], whispers:[], kropki:[],
+    palindromes:[], renbans:[], dutchWhispers:[]
+  },
+  { // Week 8 — original: Golden Pointers
+    name:"Peach Blossom", week:8, type:"Arrow, Non-Consecutive, Consecutive",
+    desc:"A variant sudoku, hand-picked just for you.",
+    reward:"Every petal was worth it, mon amour. 🌸",
+    emoji:"✨",
+    solution:mk9(()=>0), givens:mk9(()=>0),
+    cages:[], thermos:[], arrows:[], whispers:[], kropki:[],
+    palindromes:[], renbans:[], dutchWhispers:[]
+  },
+  { // Week 9 — original: Square Pairs
+    name:"Cherry Kiss", week:9, type:"Sums, Exponents",
+    desc:"A variant sudoku, hand-picked just for you.",
+    reward:"One more sweet victory. 💋",
+    emoji:"💫",
+    solution:mk9(()=>0), givens:mk9(()=>0),
+    cages:[], thermos:[], arrows:[], whispers:[], kropki:[],
+    palindromes:[], renbans:[], dutchWhispers:[]
+  },
+  { // Week 10 — original: Echo of an Arrow
+    name:"Rosy Cheeks", week:10, type:"Slingshot",
+    desc:"A variant sudoku, hand-picked just for you.",
+    reward:"You keep glowing, princesse. ✨",
+    emoji:"🌟",
+    solution:mk9(()=>0), givens:mk9(()=>0),
+    cages:[], thermos:[], arrows:[], whispers:[], kropki:[],
+    palindromes:[], renbans:[], dutchWhispers:[]
+  },
+  { // Week 11 — original: The "Not So Simple" Miracle
+    name:"Silk Ribbon", week:11, type:"Anti-Knight, Consecutive",
+    desc:"A variant sudoku, hand-picked just for you.",
+    reward:"Silk-smooth solving. 💖",
+    emoji:"🌙",
+    solution:mk9(()=>0), givens:mk9(()=>0),
+    cages:[], thermos:[], arrows:[], whispers:[], kropki:[],
+    palindromes:[], renbans:[], dutchWhispers:[]
+  },
+  { // Week 12 — original: Farrago
+    name:"Velvet Rose", week:12, type:"Region Sum Lines, Non-Repeat",
+    desc:"A variant sudoku, hand-picked just for you.",
+    reward:"So elegant, my love. 🌹",
+    emoji:"💎",
+    solution:mk9(()=>0), givens:mk9(()=>0),
+    cages:[], thermos:[], arrows:[], whispers:[], kropki:[],
+    palindromes:[], renbans:[], dutchWhispers:[]
+  },
+  { // Week 13 — original: Pentomino Islands
+    name:"Coral Bloom", week:13, type:"German Whispers",
+    desc:"A variant sudoku, hand-picked just for you.",
+    reward:"You bloomed through it. 🌺",
+    emoji:"👑",
+    solution:mk9(()=>0), givens:mk9(()=>0),
+    cages:[], thermos:[], arrows:[], whispers:[], kropki:[],
+    palindromes:[], renbans:[], dutchWhispers:[]
+  },
+  { // Week 14 — original: Archipelago
+    name:"Sunset Bloom", week:14, type:"Nurikabe, Multiplication, Sums",
+    desc:"A variant sudoku, hand-picked just for you.",
+    reward:"Golden hour just for you. 🌅",
+    emoji:"💋",
+    solution:mk9(()=>0), givens:mk9(()=>0),
+    cages:[], thermos:[], arrows:[], whispers:[], kropki:[],
+    palindromes:[], renbans:[], dutchWhispers:[]
+  },
+  { // Week 15 — original: Fractured Symmetry
+    name:"Firefly Glow", week:15, type:"Palindrome, German Whispers, Little Killer",
+    desc:"A variant sudoku, hand-picked just for you.",
+    reward:"Bright as always. 🌟",
+    emoji:"🎀",
+    solution:mk9(()=>0), givens:mk9(()=>0),
+    cages:[], thermos:[], arrows:[], whispers:[], kropki:[],
+    palindromes:[], renbans:[], dutchWhispers:[]
+  },
+  { // Week 16 — original: Ornithologically Adjacent Ratios
+    name:"Pearl Necklace", week:16, type:"Ratio, Consecutive, Incomplete Clues",
+    desc:"A variant sudoku, hand-picked just for you.",
+    reward:"Precious and yours. 💎",
+    emoji:"💖",
+    solution:mk9(()=>0), givens:mk9(()=>0),
+    cages:[], thermos:[], arrows:[], whispers:[], kropki:[],
+    palindromes:[], renbans:[], dutchWhispers:[]
+  },
+  { // Week 17 — original: Delta Line
+    name:"Ember Sky", week:17, type:"Region Sum Lines, Chinese Whispers, Multitask Clues",
+    desc:"A variant sudoku, hand-picked just for you.",
+    reward:"Warm and unstoppable. 🔥",
+    emoji:"💗",
+    solution:mk9(()=>0), givens:mk9(()=>0),
+    cages:[], thermos:[], arrows:[], whispers:[], kropki:[],
+    palindromes:[], renbans:[], dutchWhispers:[]
+  },
+  { // Week 18 — original: Japanese Festival
+    name:"Ruby Slippers", week:18, type:"Japanese Sums, XV",
+    desc:"A variant sudoku, hand-picked just for you.",
+    reward:"One step closer, ma reine. 👠",
+    emoji:"💕",
+    solution:mk9(()=>0), givens:mk9(()=>0),
+    cages:[], thermos:[], arrows:[], whispers:[], kropki:[],
+    palindromes:[], renbans:[], dutchWhispers:[]
+  },
+  { // Week 19 — original: Horsing Around
+    name:"Amber Waltz", week:19, type:"Fog, Knight\'s Move, Digit Restriction",
+    desc:"A variant sudoku, hand-picked just for you.",
+    reward:"Dancing through every clue. 💃",
+    emoji:"💓",
+    solution:mk9(()=>0), givens:mk9(()=>0),
+    cages:[], thermos:[], arrows:[], whispers:[], kropki:[],
+    palindromes:[], renbans:[], dutchWhispers:[]
+  },
+  { // Week 20 — original: Counting to 7
+    name:"Cotton Candy", week:20, type:"Renban, Numbered Rooms",
+    desc:"A variant sudoku, hand-picked just for you.",
+    reward:"Soft, sweet, victorious. 🍬",
+    emoji:"🌸",
+    solution:mk9(()=>0), givens:mk9(()=>0),
+    cages:[], thermos:[], arrows:[], whispers:[], kropki:[],
+    palindromes:[], renbans:[], dutchWhispers:[]
+  },
+  { // Week 21 — original: Cookie Crime Part 2: Connecting Clues
+    name:"Blush Petals", week:21, type:"Fog, German Whispers, Between Lines",
+    desc:"A variant sudoku, hand-picked just for you.",
+    reward:"Blushing pride, well earned. 🌸",
+    emoji:"🌷",
+    solution:mk9(()=>0), givens:mk9(()=>0),
+    cages:[], thermos:[], arrows:[], whispers:[], kropki:[],
+    palindromes:[], renbans:[], dutchWhispers:[]
+  },
+  { // Week 22 — original: More Powerful Than Hate
+    name:"Honey Moon", week:22, type:"Entropic Lines, Renban, Parity Lines",
+    desc:"A variant sudoku, hand-picked just for you.",
+    reward:"Sweet as honey. 🍯",
+    emoji:"🌹",
+    solution:mk9(()=>0), givens:mk9(()=>0),
+    cages:[], thermos:[], arrows:[], whispers:[], kropki:[],
+    palindromes:[], renbans:[], dutchWhispers:[]
+  },
+  { // Week 23 — original: Hearts and Flowers
+    name:"Golden Hour", week:23, type:"Anti-XV, Neighbour Sums, German Whispers",
+    desc:"A variant sudoku, hand-picked just for you.",
+    reward:"You light every hour. ✨",
+    emoji:"🌺",
+    solution:mk9(()=>0), givens:mk9(()=>0),
+    cages:[], thermos:[], arrows:[], whispers:[], kropki:[],
+    palindromes:[], renbans:[], dutchWhispers:[]
+  },
+  { // Week 24 — original: Big Zs
+    name:"Berry Kisses", week:24, type:"Fog, Multi-Digit Arrow, XV",
+    desc:"A variant sudoku, hand-picked just for you.",
+    reward:"Kisses on every digit. 💋",
+    emoji:"✨",
+    solution:mk9(()=>0), givens:mk9(()=>0),
+    cages:[], thermos:[], arrows:[], whispers:[], kropki:[],
+    palindromes:[], renbans:[], dutchWhispers:[]
+  },
+  { // Week 25 — original: Forcing
+    name:"Moonlit Vow", week:25, type:"Chaos Construction, Cave Count, Extra Regions",
+    desc:"A variant sudoku, hand-picked just for you.",
+    reward:"By moonlight you shine. 🌙",
+    emoji:"💫",
+    solution:mk9(()=>0), givens:mk9(()=>0),
+    cages:[], thermos:[], arrows:[], whispers:[], kropki:[],
+    palindromes:[], renbans:[], dutchWhispers:[]
+  },
+  { // Week 26 — original: Numbered Rooms Sudoku
+    name:"Aurora Bloom", week:26, type:"Numbered Rooms",
+    desc:"A variant sudoku, hand-picked just for you.",
+    reward:"You woke the aurora. 🌌",
+    emoji:"🌟",
+    solution:mk9(()=>0), givens:mk9(()=>0),
+    cages:[], thermos:[], arrows:[], whispers:[], kropki:[],
+    palindromes:[], renbans:[], dutchWhispers:[]
   }
 ];
 
@@ -210,7 +413,7 @@ const PUZZLES = [
 // (real solver-grade rendering, drag-select, smart pencil marks) instead of
 // the built-in renderer. Leave blank to fall back to the built-in board.
 // ==========================================================================
-const PUZZLE_URLS = ['celina-w1', 'celina-w2', 'celina-w3', ''];
+const PUZZLE_URLS = ['celina-w1', 'celina-w2', 'celina-w3', 'celina-w4', 'celina-w5', 'celina-w6', 'celina-w7', 'celina-w8', 'celina-w9', 'celina-w10', 'celina-w11', 'celina-w12', 'celina-w13', 'celina-w14', 'celina-w15', 'celina-w16', 'celina-w17', 'celina-w18', 'celina-w19', 'celina-w20', 'celina-w21', 'celina-w22', 'celina-w23', 'celina-w24', 'celina-w25', 'celina-w26'];
 // Already received \u2014 locked, ticked, shown at top
 const RECEIVED=[
   {name:"Van Cleef Necklace",brand:"Van Cleef & Arpels",emoji:"\uD83D\uDC8E"},
@@ -220,6 +423,17 @@ const RECEIVED=[
 const REWARDS=[
   {id:'vancleef-dia', name:'Diamond White Gold Van Cleef', emoji:'\uD83D\uDC8E', desc:'Unlocks after 3 puzzles solved', threshold:3},
   {id:'studs',        name:'Stud Earrings',                emoji:'\u2728',       desc:'Unlocks after 4 puzzles solved', threshold:4}
+];
+// Wish-prompt categories \u2014 shown after each solve so Celina can pick what surprise she'd love
+const WISH_CATEGORIES=[
+  {id:'jewelry',    emoji:'\uD83D\uDC8E', label:'Jewelry'},
+  {id:'clothes',    emoji:'\uD83D\uDC57', label:'To wear'},
+  {id:'beauty',     emoji:'\uD83C\uDF38', label:'Perfume / beauty'},
+  {id:'sweet',      emoji:'\uD83C\uDF70', label:'Something sweet'},
+  {id:'experience', emoji:'\u2708\uFE0F', label:'A little escape'},
+  {id:'flowers',    emoji:'\uD83C\uDF37', label:'Flowers'},
+  {id:'home',       emoji:'\uD83D\uDD6F\uFE0F', label:'For our home'},
+  {id:'surprise',   emoji:'\uD83C\uDF81', label:'Total surprise'}
 ];
 const PARTY_COLORS=['#e91e63','#FFD700','#FF69B4','#ff6b9d','#f8bbd0','#ce93d8','#fff','#9C27B0','#64b5f6','#ffb74d','#ff4081','#ffeb3b','#81c784'];
 
@@ -369,7 +583,7 @@ function defaults(){
   return {
     firstVisit: new Date().toISOString(),
     weeks: _seedWeeks(),
-    puzzles: Array(4).fill(0).map(_DP),
+    puzzles: Array(PUZZLES.length).fill(0).map(_DP),
     freePlay: { history: [], totalSolved: 0 },
     admin: { pwHash: null, lastUnlock: 0 },
     giftsSent:false, giftReward:null
@@ -396,6 +610,11 @@ function loadState(){
         }
         // Migrate to dynamic weeks if missing
         if(!Array.isArray(p.weeks) || p.weeks.length===0) p.weeks = _seedWeeks();
+        // Extend if new weeks were added to PUZZLES since the user's last visit.
+        if (p.weeks.length < PUZZLES.length) {
+          const seeded = _seedWeeks();
+          for (let i = p.weeks.length; i < seeded.length; i++) p.weeks.push(seeded[i]);
+        }
         // Always sync each week's puzzleUrl to the latest hardcoded value.
         // New builds of PUZZLE_URLS[wi] supersede whatever was previously saved.
         // Inline the custom-URL check to avoid TDZ on SP_URL_KEY (declared later).
@@ -449,7 +668,7 @@ function showView(id){
 
 // ============== INIT ==============
 document.addEventListener('DOMContentLoaded',()=>{
-  initEmail(); initSplash(); initHub(); initBoard(); initPoem(); initGifts();
+  initEmail(); initSplash(); initHub(); initBoard(); initPoem(); initGifts(); initWishPrompt();
   initRipples(); initMusic(); initFreePlay(); initElla(); initAmbientPurr();
   initAdmin();
 });
@@ -596,7 +815,13 @@ function spOnFreePlaySolved(elapsedSec, moves){
   save();
   // Mini celebration: send Maxime a notification + visual
   try { sendToMaxime('Celina solved a free-play puzzle', `Puzzle: ${freeplayCurrent && freeplayCurrent.id}\nTime: ${fmtTimeLong(elapsed)}\nTotal free-play solves: ${state.freePlay.totalSolved}`); } catch(e){}
-  setTimeout(()=>{ spReturnToHub(); }, 1400);
+  const fpId = (freeplayCurrent && freeplayCurrent.id) || 'free play';
+  setTimeout(()=>{
+    spReturnToHub();
+    setTimeout(()=>{
+      try { showWishPrompt({ name: `Free Play (${fpId})`, mode: 'freeplay' }); } catch(e){}
+    }, 900);
+  }, 1400);
 }
 
 // =====================================================================
@@ -701,6 +926,7 @@ async function submitAdminAuth(){
 function openAdminView(){
   renderAdminWeeks();
   renderAdminFreePlay();
+  renderAdminWishlist();
   showView('admin');
 }
 
@@ -745,6 +971,62 @@ function renderAdminFreePlay(){
     `;
     list.appendChild(row);
   });
+}
+
+function renderAdminWishlist(){
+  const container = document.getElementById('admin-wishlist');
+  if(!container) return;
+  const wl = (state.wishlist || []);
+  if(!wl.length){ container.innerHTML = '<p class="admin-empty">No wishes yet.</p>'; return; }
+  // Aggregate: count per category
+  const counts = {};
+  for(const w of wl){ counts[w.category] = (counts[w.category] || 0) + 1; }
+  const ranked = WISH_CATEGORIES
+    .map(c => ({ ...c, count: counts[c.id] || 0 }))
+    .filter(c => c.count > 0)
+    .sort((a,b) => b.count - a.count);
+  const maxCount = ranked[0] ? ranked[0].count : 1;
+  const total = wl.length;
+  const withNote = wl.filter(w => w.note && w.note.trim()).length;
+  const latest = wl[0];
+  const daysActive = new Set(wl.map(w => {const d=new Date(w.at);return d.getFullYear()+'-'+d.getMonth()+'-'+d.getDate();})).size;
+
+  const summaryHtml = `
+    <div class="wish-summary">
+      <div class="wish-summary-cell"><span class="wish-summary-val">${total}</span><span class="wish-summary-lbl">Wishes</span></div>
+      <div class="wish-summary-cell"><span class="wish-summary-val">${withNote}</span><span class="wish-summary-lbl">With hint</span></div>
+      <div class="wish-summary-cell"><span class="wish-summary-val">${daysActive}</span><span class="wish-summary-lbl">Days</span></div>
+      <div class="wish-summary-cell"><span class="wish-summary-val">${ranked[0]?ranked[0].emoji:'—'}</span><span class="wish-summary-lbl">Top pick</span></div>
+    </div>`;
+
+  const chartHtml = `
+    <div class="wish-chart">
+      ${ranked.map(c => `
+        <div class="wish-chart-row">
+          <span class="wish-chart-emoji">${c.emoji}</span>
+          <div class="wish-chart-bar-wrap">
+            <div class="wish-chart-bar" style="width:${Math.round(c.count/maxCount*100)}%"></div>
+            <span class="wish-chart-label">${_esc(c.label)}</span>
+          </div>
+          <span class="wish-chart-count">${c.count}</span>
+        </div>`).join('')}
+    </div>`;
+
+  const listHtml = `
+    <div class="wish-history-title">Recent wishes</div>
+    <div class="wish-history">
+      ${wl.slice(0, 30).map(w => `
+        <div class="wish-history-row">
+          <span class="wish-history-emoji">${w.categoryEmoji||'🎁'}</span>
+          <div class="wish-history-body">
+            <div class="wish-history-cat">${_esc(w.categoryLabel||'Surprise')}${w.context && w.context.name ? ` <span class="wish-history-ctx">· ${_esc(w.context.name)}</span>` : ''}</div>
+            ${w.note ? `<div class="wish-history-note">"${_esc(w.note)}"</div>` : ''}
+          </div>
+          <span class="wish-history-ago">${relativeAgo(w.at)}</span>
+        </div>`).join('')}
+    </div>`;
+
+  container.innerHTML = summaryHtml + chartHtml + listHtml;
 }
 
 function openWeekEdit(idx){
@@ -1503,6 +1785,20 @@ function buildStatsView(){
     </div>`:`
     <div class="stats-section-title">🕑 Recent Free Play</div>
     <p class="fp-empty">No free-play puzzles solved yet. Tap Free Play on the menu to start!</p>`}
+    ${(function(){
+      const wl = (state.wishlist||[]).slice(0,10);
+      if (!wl.length) return '<div class="stats-section-title">💌 Your wishlist</div><p class="fp-empty">No wishes yet — solve a puzzle to leave one.</p>';
+      return '<div class="stats-section-title">💌 Your wishlist</div><div class="wishlist-list">' +
+        wl.map(w => `
+          <div class="wishlist-row">
+            <span class="wishlist-emoji">${w.categoryEmoji||'🎁'}</span>
+            <div class="wishlist-body">
+              <span class="wishlist-cat">${_esc(w.categoryLabel||'Surprise')}</span>
+              ${w.note?`<span class="wishlist-note">"${_esc(w.note)}"</span>`:''}
+            </div>
+            <span class="wishlist-ago">${relativeAgo(w.at)}</span>
+          </div>`).join('') + '</div>';
+    })()}
   `;
 }
 
@@ -1579,8 +1875,9 @@ function updateHub(){
   // v2 hub progress bar
   const pf=document.getElementById('hub-progress-fill');
   const pt=document.getElementById('hub-progress-text');
-  if(pf) pf.style.width=Math.round(doneCount/4*100)+'%';
-  if(pt) pt.textContent=doneCount+' / 4';
+  const totalWeeks = (state.weeks && state.weeks.length) || PUZZLES.length;
+  if(pf) pf.style.width=Math.round(doneCount/totalWeeks*100)+'%';
+  if(pt) pt.textContent=doneCount+' / '+totalWeeks;
   // Hub desc stays static ("Four puzzles. One reward.")
   // Days since first visit
   const footerEl=document.querySelector('.hub-footer');
@@ -1953,6 +2250,10 @@ function spOnSolved(elapsedSec, moves){
             `Hey Maxime!\n\nCelina just solved her ${doneNow}${doneNow===1?'st':doneNow===2?'nd':doneNow===3?'rd':'th'} puzzle and unlocked:\n\n${unlocked.emoji} ${unlocked.name}\n\n— Ella the cat`
           );
         }
+        // Post-solve wish prompt: ask what surprise she'd love
+        setTimeout(() => {
+          try { showWishPrompt({ name: getWeek(wi).name, week: wi + 1, mode: 'week' }); } catch(e){}
+        }, 900);
       } catch (e) { console.warn(e); }
     }, 250);
   }, 1400);
@@ -3463,6 +3764,67 @@ function initPoem(){
     s.classList.add('scroll-hidden');
     observer.observe(s);
   });
+}
+
+// ============== WISH PROMPT (post-solve gift discovery) ==============
+let _wishContext = null;
+function initWishPrompt(){
+  const grid = document.getElementById('wish-grid');
+  if(!grid) return;
+  grid.innerHTML = WISH_CATEGORIES.map(c => `
+    <button class="wish-chip" data-id="${c.id}" type="button">
+      <span class="wish-emoji">${c.emoji}</span>
+      <span class="wish-label">${c.label}</span>
+    </button>`).join('');
+  grid.querySelectorAll('.wish-chip').forEach(chip => {
+    chip.addEventListener('click', () => {
+      grid.querySelectorAll('.wish-chip').forEach(c => c.classList.remove('on'));
+      chip.classList.add('on');
+      const btn = document.getElementById('btn-wish-send');
+      if (btn) btn.disabled = false;
+    });
+  });
+  const skipBtn = document.getElementById('btn-wish-skip');
+  if (skipBtn) skipBtn.addEventListener('click', closeWishPrompt);
+  const sendBtn = document.getElementById('btn-wish-send');
+  if (sendBtn) sendBtn.addEventListener('click', submitWish);
+}
+function showWishPrompt(context){
+  _wishContext = context || {};
+  document.querySelectorAll('#wish-modal .wish-chip').forEach(c => c.classList.remove('on'));
+  const note = document.getElementById('wish-note'); if (note) note.value = '';
+  const btn = document.getElementById('btn-wish-send'); if (btn) btn.disabled = true;
+  const modal = document.getElementById('wish-modal'); if (modal) modal.style.display = 'flex';
+}
+function closeWishPrompt(){
+  const modal = document.getElementById('wish-modal'); if (modal) modal.style.display = 'none';
+  _wishContext = null;
+}
+function submitWish(){
+  const picked = document.querySelector('#wish-grid .wish-chip.on');
+  if (!picked) return;
+  const cat = WISH_CATEGORIES.find(c => c.id === picked.dataset.id);
+  if (!cat) return;
+  const noteEl = document.getElementById('wish-note');
+  const note = noteEl ? (noteEl.value || '').trim() : '';
+  const ctx = _wishContext || {};
+  state.wishlist = state.wishlist || [];
+  state.wishlist.unshift({
+    category: cat.id, categoryLabel: cat.label, categoryEmoji: cat.emoji,
+    note, context: ctx, at: Date.now()
+  });
+  if (state.wishlist.length > 200) state.wishlist.length = 200;
+  save();
+  const noteLine = note ? `\nHint: "${note}"\n` : '';
+  const where = ctx.name ? ` after solving ${ctx.name}` : '';
+  try {
+    sendToMaxime(
+      `Celina left a wish: ${cat.emoji} ${cat.label}`,
+      `Hey Maxime!\n\nCelina just made a wish${where}:\n\n${cat.emoji} ${cat.label}${noteLine}\n— Ella the cat`
+    );
+  } catch(e){ console.warn('wish notify failed', e); }
+  closeWishPrompt();
+  try { showToast('Sent to Maxime 💌', 2200); } catch(e){}
 }
 
 // ============== GIFTS ==============

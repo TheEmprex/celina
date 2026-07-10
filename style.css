@@ -35,7 +35,7 @@ body{font-family:'Quicksand',system-ui,sans-serif;color:var(--text);height:100%;
 @keyframes fhUp{0%{opacity:0;transform:translateY(0) rotate(0) scale(.5)}10%{opacity:.3}85%{opacity:.08}100%{opacity:0;transform:translateY(-110vh) rotate(40deg) scale(1)}}
 
 /* =============== VIEWS =============== */
-.view{position:fixed;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;opacity:0;visibility:hidden;transition:opacity .45s ease,visibility .45s ease,transform .45s var(--ease);z-index:1;padding:16px;padding-top:calc(16px + var(--safe-t));padding-bottom:calc(16px + var(--safe-b));transform:scale(.97) translateY(10px);will-change:transform,opacity;-webkit-backface-visibility:hidden}
+.view{position:fixed;inset:0;height:100dvh;display:flex;flex-direction:column;align-items:center;justify-content:center;opacity:0;visibility:hidden;transition:opacity .45s ease,visibility .45s ease,transform .45s var(--ease);z-index:1;padding:16px;padding-top:calc(16px + var(--safe-t));padding-bottom:calc(16px + var(--safe-b));transform:scale(.97) translateY(10px);will-change:transform,opacity;-webkit-backface-visibility:hidden}
 .view.active{opacity:1;visibility:visible;transform:scale(1) translateY(0)}
 .view.leaving{opacity:0;transform:scale(.98) translateY(-6px);transition:opacity .2s ease,transform .2s ease}
 
@@ -411,7 +411,7 @@ body{font-family:'Quicksand',system-ui,sans-serif;color:var(--text);height:100%;
 .hub-actions{display:none !important}
 
 /* =============== MODAL (dark glass) =============== */
-.modal-overlay{position:fixed;inset:0;background:rgba(8,6,12,.78);display:flex;align-items:center;justify-content:center;z-index:50;padding:20px;animation:modalIn .25s ease;backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px)}
+.modal-overlay{position:fixed;inset:0;height:100dvh;background:rgba(8,6,12,.78);display:flex;align-items:center;justify-content:center;z-index:50;padding:20px;animation:modalIn .25s ease;backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px)}
 @keyframes modalIn{from{opacity:0}to{opacity:1}}
 .modal-card{background:#161220;border:1px solid rgba(255,255,255,.08);border-radius:18px;padding:26px 22px 20px;max-width:400px;width:100%;max-height:calc(100dvh - 40px);overflow-y:auto;-webkit-overflow-scrolling:touch;box-shadow:0 24px 60px rgba(0,0,0,.5);animation:modalPop .28s var(--ease);text-align:center}
 @keyframes modalPop{from{opacity:0;transform:scale(.92) translateY(10px)}to{opacity:1;transform:scale(1) translateY(0)}}
@@ -554,6 +554,69 @@ body{font-family:'Quicksand',system-ui,sans-serif;color:var(--text);height:100%;
 .fp-recent-time{font-size:.78rem;font-weight:700;color:#fff;font-variant-numeric:tabular-nums;flex-shrink:0}
 .fp-recent-ago{font-size:.64rem;color:rgba(255,255,255,.4);flex-shrink:0;min-width:58px;text-align:right}
 .fp-empty{font-size:.78rem;color:rgba(255,255,255,.45);text-align:center;padding:14px 8px;margin:8px 0 0;font-style:italic}
+
+/* Wish prompt (post-solve gift-wish modal) */
+#wish-modal .modal-card{max-width:420px;text-align:left}
+.wish-eyebrow{font-size:.68rem;letter-spacing:.24em;text-transform:uppercase;color:var(--pink-300,#f48fb1);font-weight:700;margin-bottom:4px}
+.modal-header h3{margin:0 0 4px}
+.wish-sub{font-size:.78rem;color:rgba(255,255,255,.6);margin:0 0 12px;line-height:1.5}
+.wish-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:8px 0 14px}
+.wish-chip{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);border-radius:12px;padding:10px 11px;display:flex;align-items:center;gap:9px;color:rgba(255,255,255,.85);cursor:pointer;transition:all .18s ease;font-family:inherit;font-size:.82rem;font-weight:500;text-align:left;-webkit-tap-highlight-color:transparent}
+.wish-chip:active{transform:scale(.97)}
+.wish-chip.on{background:linear-gradient(135deg,rgba(233,30,99,.16),rgba(233,30,99,.04));border-color:rgba(233,30,99,.55);box-shadow:0 0 16px rgba(233,30,99,.22),inset 0 0 0 1px rgba(233,30,99,.2);color:#fff}
+.wish-emoji{font-size:1.35rem;flex-shrink:0;filter:drop-shadow(0 2px 4px rgba(0,0,0,.3));transition:transform .2s ease}
+.wish-chip.on .wish-emoji{transform:scale(1.15)}
+.wish-label{font-size:.82rem;line-height:1.2}
+.wish-hint label{font-size:.66rem;color:rgba(255,255,255,.5);text-transform:uppercase;letter-spacing:.1em;display:block;margin-bottom:6px;font-weight:600}
+.wish-hint input{width:100%;padding:11px 13px;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);border-radius:10px;color:#fff;font-family:inherit;font-size:.85rem;box-sizing:border-box;outline:none;transition:border-color .2s ease}
+.wish-hint input:focus{border-color:rgba(233,30,99,.5);background:rgba(255,255,255,.07)}
+.wish-actions{display:flex;gap:10px;margin-top:16px}
+.wish-actions .btn-secondary,.wish-actions .btn-primary{flex:1;padding:12px 18px;font-size:.85rem}
+.btn-secondary{background:rgba(255,255,255,.06);color:rgba(255,255,255,.75);border:1px solid rgba(255,255,255,.1);border-radius:50px;font-family:inherit;font-weight:600;cursor:pointer;transition:all .2s ease;-webkit-tap-highlight-color:transparent}
+.btn-secondary:active{transform:scale(.96);background:rgba(255,255,255,.1)}
+.btn-primary:disabled{opacity:.4;cursor:not-allowed;box-shadow:none}
+
+/* Wishlist section in stats */
+.wishlist-list{display:flex;flex-direction:column;gap:6px;margin:8px 0 4px}
+.wishlist-row{display:flex;align-items:center;gap:10px;background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.05);border-radius:10px;padding:9px 11px}
+.wishlist-emoji{font-size:1.15rem;flex-shrink:0}
+.wishlist-body{flex:1;min-width:0;display:flex;flex-direction:column;gap:2px}
+.wishlist-cat{font-size:.78rem;color:#fff;font-weight:600}
+.wishlist-note{font-size:.7rem;color:rgba(255,255,255,.55);font-style:italic;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.wishlist-ago{font-size:.62rem;color:rgba(255,255,255,.35);flex-shrink:0;text-align:right;min-width:60px}
+
+/* Admin wishlist insights */
+.wish-summary{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:12px}
+.wish-summary-cell{background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.06);border-radius:10px;padding:10px 6px;text-align:center;display:flex;flex-direction:column;gap:3px}
+.wish-summary-val{font-size:1.1rem;font-weight:700;color:#fff;font-variant-numeric:tabular-nums;line-height:1.1}
+.wish-summary-lbl{font-size:.58rem;color:rgba(255,255,255,.45);text-transform:uppercase;letter-spacing:.08em;font-weight:500}
+.wish-chart{display:flex;flex-direction:column;gap:6px;margin:12px 0}
+.wish-chart-row{display:flex;align-items:center;gap:9px}
+.wish-chart-emoji{font-size:1.1rem;flex-shrink:0;width:22px;text-align:center}
+.wish-chart-bar-wrap{flex:1;position:relative;height:22px;background:rgba(255,255,255,.04);border-radius:6px;overflow:hidden;display:flex;align-items:center}
+.wish-chart-bar{position:absolute;left:0;top:0;bottom:0;background:linear-gradient(90deg,rgba(233,30,99,.55),rgba(233,30,99,.85));border-radius:6px;transition:width .4s ease}
+.wish-chart-label{position:relative;padding-left:10px;font-size:.72rem;font-weight:500;color:#fff;letter-spacing:.02em;z-index:1;text-shadow:0 1px 2px rgba(0,0,0,.4)}
+.wish-chart-count{flex-shrink:0;font-family:ui-monospace,'SF Mono',Menlo,monospace;font-size:.75rem;font-weight:700;color:#f48fb1;min-width:22px;text-align:right}
+.wish-history-title{font-size:.7rem;color:rgba(255,255,255,.55);font-weight:600;text-transform:uppercase;letter-spacing:.1em;margin:14px 0 8px}
+.wish-history{display:flex;flex-direction:column;gap:5px;max-height:280px;overflow-y:auto;-webkit-overflow-scrolling:touch;padding-right:2px}
+.wish-history-row{display:flex;align-items:center;gap:10px;background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.05);border-radius:9px;padding:8px 10px}
+.wish-history-emoji{font-size:1rem;flex-shrink:0}
+.wish-history-body{flex:1;min-width:0;display:flex;flex-direction:column;gap:2px}
+.wish-history-cat{font-size:.75rem;color:#fff;font-weight:600}
+.wish-history-ctx{font-size:.66rem;color:rgba(255,255,255,.45);font-weight:400}
+.wish-history-note{font-size:.66rem;color:rgba(255,255,255,.55);font-style:italic;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.wish-history-ago{font-size:.6rem;color:rgba(255,255,255,.35);flex-shrink:0;text-align:right;min-width:50px}
+
+/* iOS Add-to-Home-Screen install hint */
+.ios-install{position:fixed;left:10px;right:10px;bottom:calc(10px + var(--safe-b,0px));z-index:9000;display:flex;align-items:center;gap:11px;background:linear-gradient(135deg,#1e1530,#2a1c3e);border:1px solid rgba(233,30,99,.35);border-radius:16px;padding:12px 13px;box-shadow:0 12px 36px rgba(0,0,0,.55);animation:iosInstallIn .5s var(--ease,ease) both}
+@keyframes iosInstallIn{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+.ios-install-icon{font-size:1.7rem;flex-shrink:0;filter:drop-shadow(0 2px 8px rgba(233,30,99,.4))}
+.ios-install-text{flex:1;min-width:0;display:flex;flex-direction:column;gap:2px;text-align:left}
+.ios-install-text strong{font-size:.84rem;font-weight:700;color:#fff}
+.ios-install-text span{font-size:.72rem;color:rgba(255,255,255,.6);line-height:1.45}
+.ios-share-ico{width:14px;height:14px;vertical-align:-3px;color:#f48fb1}
+.ios-install-x{flex-shrink:0;width:30px;height:30px;border:0;border-radius:50%;background:rgba(255,255,255,.08);color:rgba(255,255,255,.7);font-size:.85rem;cursor:pointer;display:flex;align-items:center;justify-content:center;-webkit-tap-highlight-color:transparent}
+.ios-install-x:active{transform:scale(.9);background:rgba(255,255,255,.15)}
 
 /* --- Hint count badge --- */
 .hint-count{display:inline-flex;align-items:center;justify-content:center;min-width:16px;height:16px;border-radius:8px;background:rgba(233,30,99,.3);color:#fff;font-size:.55rem;font-weight:700;margin-left:3px;padding:0 4px}
