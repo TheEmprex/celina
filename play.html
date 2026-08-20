@@ -847,6 +847,38 @@ if (!window.__noPuzzle && !window.__deferBundleLoad) {
 		puzzleTaps = 0;
 	}
 
+	// Read the stored solution (81-digit string) from wherever SudokuPad stashed it.
+	function readSolution(app) {
+		try {
+			const sp = app.sourcePuzzle || {};
+			const meta = sp.metadata || {};
+			return sp.solution || meta.solution || '';
+		} catch (e) { return ''; }
+	}
+
+	// Read the current grid as an 81-char string of digits (0 = empty).
+	function readGridStr(app) {
+		try {
+			const cells = app.puzzle.cells || [];
+			const grid = new Array(81).fill('0');
+			for (const c of cells) {
+				if (!c) continue;
+				const r = c.r, col = c.c;
+				if (typeof r !== 'number' || typeof col !== 'number') continue;
+				const idx = r * 9 + col;
+				if (idx < 0 || idx >= 81) continue;
+				let v = 0;
+				try {
+					if (c.getVal) v = c.getVal('value') || c.getVal('normal') || 0;
+					else if (c.propGetVal) v = c.propGetVal('value') || c.propGetVal('normal') || 0;
+				} catch (e) {}
+				if (typeof v !== 'number') v = parseInt(v, 10) || 0;
+				grid[idx] = String(v);
+			}
+			return grid.join('');
+		} catch (e) { return ''; }
+	}
+
 	function trySolved() {
 		try {
 			const app = window.Framework && Framework.app;
@@ -860,6 +892,18 @@ if (!window.__noPuzzle && !window.__deferBundleLoad) {
 			const userTouched = cells.some(c => c && (c.hasProp && (c.hasProp('normal') || c.hasProp('value'))));
 			if (!userTouched) return false;
 			if (typeof app.puzzle.isCompleted === 'function' && app.puzzle.isCompleted()) {
+				// Stricter check: SudokuPad's isCompleted only enforces base sudoku rules,
+				// not variant constraints (arrows, thermos, whispers…). Compare against
+				// the stored solution before firing solved.
+				const sol = readSolution(app);
+				if (sol && sol.length === 81) {
+					const grid = readGridStr(app);
+					if (grid.length === 81) {
+						for (let i = 0; i < 81; i++) {
+							if (grid[i] !== sol[i]) return false;
+						}
+					}
+				}
 				fireSolved();
 				return true;
 			}
