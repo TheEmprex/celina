@@ -653,6 +653,41 @@ function loadSudokuPadBundle() {
 			try { window.PuzzleLoader = PuzzleLoader; } catch(e){}
 			try { window.App = App; } catch(e){}
 
+			// Monkey-patch fetchPuzzle to use RELATIVE ./api/puzzle/ paths.
+			// The bundle hardcodes /api/puzzle/<id> as absolute — on GitHub Pages the
+			// app lives at /celina/ so absolute paths hit the domain root and 404.
+			// We already pre-fetch in the parent, but this belt-and-suspenders catches
+			// (a) any code path that bypasses the pre-fetch and (b) session-cached
+			// puzzles that trigger a background re-fetch.
+			try {
+				const _origFetch = PuzzleLoader.fetchPuzzle;
+				PuzzleLoader.fetchPuzzle = async function(puzzleId, opts) {
+					try {
+						if (typeof puzzleId !== 'string') return _origFetch.call(this, puzzleId, opts);
+						// If it's already a parsed puzzle format (scl/ctc/fpuz…), passthrough
+						if (!PuzzleLoader.isRemotePuzzleId(puzzleId)) return _origFetch.call(this, puzzleId, opts);
+						// Try our RELATIVE local endpoint first
+						const relUrl = './api/puzzle/' + puzzleId.split('/').map(encodeURIComponent).join('/');
+						try {
+							const resp = await fetch(relUrl);
+							if (resp.ok) {
+								let body = (await resp.text()).trim();
+								// Match upstream behavior: if body still looks like a remote id, re-wrap
+								try {
+									if (PuzzleLoader.isRemotePuzzleId(body)) body = 'scl' + PuzzleLoader.saveDecompress ? body : body;
+								} catch(e){}
+								try { PuzzleLoader.updateCache && PuzzleLoader.updateCache(puzzleId, body); } catch(e){}
+								return body;
+							}
+						} catch(e){}
+						// Fall through to original (which tries the legacy proxies)
+						return _origFetch.call(this, puzzleId, opts);
+					} catch (e) {
+						return _origFetch.call(this, puzzleId, opts);
+					}
+				};
+			} catch(e){ console.warn('fetchPuzzle patch failed', e); }
+
 			// (Dialog suppression removed — let SudokuPad show its native
 			// "Resume Puzzle" popup. The user clicks it to start the puzzle.)
 
