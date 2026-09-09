@@ -94,8 +94,6 @@
 			z-index: 10000;
 		}
 		.embed-bar > * { pointer-events: auto; }
-		.embed-bar-center { display: none !important; }
-		.embed-bar #embed-rules,
 		.embed-bar #embed-settings { display: none !important; }
 		.embed-btn {
 			width: 44px; height: 44px; border: 0; background: rgba(0,0,0,.05);
@@ -748,7 +746,11 @@ if (!window.__noPuzzle && !window.__deferBundleLoad) {
 		el.addEventListener('click', handler, { capture: true });
 	}
 
-	bindTap(document.getElementById('embed-back'), () => { post('back', { taps: puzzleTaps }); puzzleTaps = 0; });
+	bindTap(document.getElementById('embed-back'), () => {
+		try { if (typeof _wakeLock !== 'undefined' && _wakeLock) { _wakeLock.release(); _wakeLock = null; } } catch(e){}
+		post('back', { taps: puzzleTaps });
+		puzzleTaps = 0;
+	});
 	bindTap(document.getElementById('embed-restart'), () => {
 		if (!confirm('Restart this puzzle? Progress will be lost.')) return;
 		try {
@@ -781,21 +783,38 @@ if (!window.__noPuzzle && !window.__deferBundleLoad) {
 	const rulesPanel = document.getElementById('rules-panel');
 	const rulesContent = document.getElementById('rules-content');
 	let rulesLoaded = false;
+	// Suppress SudokuPad's original title (which reveals the CTC source). Show only rules.
 	const populateRules = () => {
 		if (rulesLoaded || !rulesContent) return;
 		try {
 			const sp = window.Framework && Framework.app && Framework.app.sourcePuzzle;
 			if (!sp) return;
-			const title = (sp.title || 'Puzzle').replace(/^"|"$/g, '');
-			const author = sp.author ? ` · by ${sp.author}` : '';
-			let rules = sp.ruleset || sp.rules || '';
+			let rules = sp.ruleset || sp.rules || (sp.metadata && sp.metadata.rules) || '';
 			if (Array.isArray(rules)) rules = rules.join('\n\n');
 			rules = String(rules).trim();
-			rulesContent.innerHTML = '<h3>' + escapeHtml(title) + escapeHtml(author) + '</h3>' +
+			if (!rules) return;
+			rulesContent.innerHTML = '<h3>Rules</h3>' +
 				rules.split(/\n+/).map(p => '<p>' + escapeHtml(p) + '</p>').join('');
 			rulesLoaded = true;
 		} catch (e) { console.warn('Could not load rules:', e); }
 	};
+	// Auto-open rules on first visit to each week — new variants deserve introduction.
+	// Reads the ?week= URL param stored earlier, uses a per-week localStorage flag.
+	const _urlParams = new URLSearchParams(location.search);
+	const _autoOpenKey = 'rules-seen-w' + (_urlParams.get('week') || 'x');
+	function tryAutoOpenRules(attempts) {
+		if ((attempts || 0) > 40) return; // ~10s max
+		if (!rulesPanel || !rulesBtn) return;
+		if (localStorage.getItem(_autoOpenKey) === '1') return;
+		populateRules();
+		if (rulesLoaded) {
+			rulesPanel.classList.add('open');
+			try { localStorage.setItem(_autoOpenKey, '1'); } catch(e){}
+			return;
+		}
+		setTimeout(() => tryAutoOpenRules((attempts || 0) + 1), 250);
+	}
+	setTimeout(() => tryAutoOpenRules(0), 800);
 	const escapeHtml = s => String(s).replace(/[&<>"']/g, c => ({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;' })[c]);
 	if (rulesBtn && rulesPanel) {
 		rulesBtn.addEventListener('click', () => {
@@ -804,19 +823,25 @@ if (!window.__noPuzzle && !window.__deferBundleLoad) {
 		});
 	}
 
-	// === Live elapsed timer in the bar ===
+	// === Live elapsed timer in the bar — starts on first cell/keypad interaction, not iframe load ===
+	// (Rules-reading time was inflating the displayed timer before this fix.)
 	const timerEl = document.getElementById('embed-timer');
+	let timerStartMs = 0;
 	if (timerEl) {
-		const t0 = Date.now();
 		const fmt = (ms) => {
 			const s = Math.floor(ms / 1000);
 			const m = Math.floor(s / 60);
 			const h = Math.floor(m / 60);
 			const ss = String(s % 60).padStart(2, '0');
-			const mm = String(m % 60).padStart(2, h ? 2 : 0);
+			const mm = String(m % 60).padStart(h ? 2 : 1, '0');
 			return h ? `${h}:${mm}:${ss}` : `${m}:${ss}`;
 		};
-		setInterval(() => { timerEl.textContent = fmt(Date.now() - t0); }, 1000);
+		const startTimer = () => { if (!timerStartMs) timerStartMs = Date.now(); };
+		document.addEventListener('pointerdown', startTimer, { once: true, passive: true, capture: true });
+		document.addEventListener('keydown', startTimer, { once: true, passive: true, capture: true });
+		setInterval(() => {
+			if (timerStartMs) timerEl.textContent = fmt(Date.now() - timerStartMs);
+		}, 1000);
 	}
 
 	let solvedFired = false;
@@ -825,6 +850,20 @@ if (!window.__noPuzzle && !window.__deferBundleLoad) {
 	// Count every tap inside the puzzle so the parent can fold it into total taps.
 	let puzzleTaps = 0;
 	document.addEventListener('pointerdown', () => { puzzleTaps++; }, { passive: true, capture: true });
+
+	// Wake Lock — keep iPhone awake during long thinks. Auto-reacquires on tab-return.
+	let _wakeLock = null;
+	async function acquireWakeLock() {
+		if (!('wakeLock' in navigator)) return;
+		try {
+			_wakeLock = await navigator.wakeLock.request('screen');
+			_wakeLock.addEventListener('release', () => { _wakeLock = null; });
+		} catch (e) { /* denied or unavailable */ }
+	}
+	acquireWakeLock();
+	document.addEventListener('visibilitychange', () => {
+		if (document.visibilityState === 'visible' && !_wakeLock) acquireWakeLock();
+	});
 
 	// Read SudokuPad's action log length — the number of moves the solver made.
 	function getMoveCount() {
@@ -837,7 +876,9 @@ if (!window.__noPuzzle && !window.__deferBundleLoad) {
 	function fireSolved() {
 		if (solvedFired) return;
 		solvedFired = true;
-		const elapsed = startMs ? Math.round((Date.now() - startMs) / 1000) : 0;
+		// Prefer timerStartMs (real user-input start) over startMs (iframe-load, inflates by rules-reading time)
+		const anchor = timerStartMs || startMs;
+		const elapsed = anchor ? Math.round((Date.now() - anchor) / 1000) : 0;
 		const flash = document.getElementById('solved-flash');
 		if (flash) {
 			flash.classList.add('show');
@@ -845,6 +886,7 @@ if (!window.__noPuzzle && !window.__deferBundleLoad) {
 		}
 		post('solved', { elapsedSec: elapsed, moves: getMoveCount(), taps: puzzleTaps });
 		puzzleTaps = 0;
+		try { if (_wakeLock) { _wakeLock.release(); _wakeLock = null; } } catch(e){}
 	}
 
 	// Read the stored solution (81-digit string) from wherever SudokuPad stashed it.

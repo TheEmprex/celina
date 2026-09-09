@@ -1,4 +1,4 @@
-const CACHE='celina-puzzle-v91-all-solutions';
+const CACHE='celina-puzzle-v92-comprehensive';
 const ASSETS=['./','./index.html','./style.css','./game.js','./play.html','./manifest.json','./favicon.svg','./icon.svg'];
 
 self.addEventListener('install',e=>{
@@ -63,9 +63,15 @@ self.addEventListener('fetch', e => {
   // POST/PUT/etc. — let browser handle.
   if (e.request.method !== 'GET') return;
 
-  // Pass-through: nginx-proxied endpoints (puzzle data + assets from sudokupad.app).
-  // Don't cache these in the SW — nginx already caches them.
-  if (url.origin === location.origin && (url.pathname.startsWith('/api/puzzle/') || url.pathname.startsWith('/assets/'))) {
+  // Puzzle body files: network-first so corrections propagate without a full SW cache bump.
+  // Matches both root-hosted (/api/puzzle/…) and subpath-hosted (/celina/api/puzzle/…) — the
+  // subpath is used on GitHub Pages.
+  if (url.origin === location.origin && url.pathname.includes('/api/puzzle/')) {
+    e.respondWith(tryNetworkThenCache(e.request));
+    return;
+  }
+  // Legacy nginx-only proxied assets — pass through.
+  if (url.origin === location.origin && url.pathname.includes('/assets/')) {
     return;
   }
 

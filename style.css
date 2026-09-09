@@ -260,7 +260,19 @@ body{font-family:'Quicksand',system-ui,sans-serif;color:var(--text);height:100%;
 	margin-top:1px;
 	white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
 }
-.card-diff{display:none}
+.card-diff{display:flex;gap:2px;margin-top:4px}
+.diff-star{font-size:.68rem;color:rgba(255,255,255,.15);line-height:1}
+.diff-star.on{color:#f48fb1;text-shadow:0 0 5px rgba(233,30,99,.4)}
+
+/* NEW badge — the pulsing pink dot + brighter left stripe for the most-recently-unlocked card */
+.puzzle-card.is-new{border-color:rgba(233,30,99,.55);box-shadow:0 0 22px rgba(233,30,99,.22),inset 3px 0 0 var(--pink-500)}
+.puzzle-card.is-new .card-status{color:#fff;font-weight:700}
+.new-dot{display:inline-block;width:8px;height:8px;border-radius:50%;background:var(--pink-500);margin-right:6px;vertical-align:1px;animation:newDotPulse 1.4s ease-in-out infinite;box-shadow:0 0 8px var(--pink-500)}
+@keyframes newDotPulse{0%,100%{opacity:.55;transform:scale(1)}50%{opacity:1;transform:scale(1.25)}}
+
+/* Next-unlock chip — small pill under the puzzle list */
+.hub-next-unlock{display:flex;align-items:center;justify-content:center;gap:6px;font-size:.72rem;color:rgba(255,255,255,.55);background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.06);border-radius:999px;padding:8px 14px;margin:10px auto 4px;max-width:fit-content;letter-spacing:.02em;font-weight:500;font-style:italic}
+.hub-next-unlock .chip-ico{font-size:.9rem;color:var(--pink-300);font-style:normal}
 .card-status{
 	grid-column:3;grid-row:1/span 3;
 	font-size:.66rem;font-weight:600;color:rgba(255,255,255,.4);
@@ -607,6 +619,16 @@ body{font-family:'Quicksand',system-ui,sans-serif;color:var(--text);height:100%;
 .wish-history-note{font-size:.66rem;color:rgba(255,255,255,.55);font-style:italic;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .wish-history-ago{font-size:.6rem;color:rgba(255,255,255,.35);flex-shrink:0;text-align:right;min-width:50px}
 
+/* Wish ack buttons + status badges (admin) */
+.wish-ack-actions{display:flex;gap:4px;margin-top:6px}
+.wish-ack-btn{width:26px;height:26px;border:1px solid rgba(255,255,255,.1);background:rgba(255,255,255,.04);border-radius:8px;font-size:.85rem;cursor:pointer;color:#fff;display:flex;align-items:center;justify-content:center;-webkit-tap-highlight-color:transparent;transition:all .15s ease}
+.wish-ack-btn:hover{background:rgba(233,30,99,.15);border-color:rgba(233,30,99,.4)}
+.wish-ack-btn:active{transform:scale(.9)}
+.wish-ack-badge{display:inline-flex;align-items:center;gap:4px;font-size:.6rem;font-weight:600;padding:3px 7px;border-radius:6px;margin-top:4px;text-transform:uppercase;letter-spacing:.06em}
+.wa-seen{background:rgba(100,181,246,.15);color:#64B5F6;border:1px solid rgba(100,181,246,.3)}
+.wa-loved{background:rgba(233,30,99,.15);color:#f48fb1;border:1px solid rgba(233,30,99,.35)}
+.wa-onway{background:rgba(255,193,7,.15);color:#FFD54F;border:1px solid rgba(255,193,7,.3)}
+
 /* iOS Add-to-Home-Screen install hint */
 .ios-install{position:fixed;left:10px;right:10px;bottom:calc(10px + var(--safe-b,0px));z-index:9000;display:flex;align-items:center;gap:11px;background:linear-gradient(135deg,#1e1530,#2a1c3e);border:1px solid rgba(233,30,99,.35);border-radius:16px;padding:12px 13px;box-shadow:0 12px 36px rgba(0,0,0,.55);animation:iosInstallIn .5s var(--ease,ease) both}
 @keyframes iosInstallIn{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
@@ -643,7 +665,7 @@ body{font-family:'Quicksand',system-ui,sans-serif;color:var(--text);height:100%;
 .cell.peer .notes span{color:#546e7a}
 
 /* --- Killer cages --- */
-.cage-label{position:absolute;top:0;left:1px;font-size:calc(var(--cell)*.18);color:#B71C1C;font-weight:800;z-index:5;line-height:1;pointer-events:none;font-family:'Quicksand',sans-serif;padding:0 2px;border-radius:0 0 3px 0;text-shadow:0 0 3px rgba(255,255,255,.9),0 0 1px rgba(255,255,255,1)}
+.cage-label{position:absolute;top:0;left:1px;font-size:calc(var(--cell)*.24);color:#B71C1C;font-weight:900;z-index:5;line-height:1;pointer-events:none;font-family:'Quicksand',sans-serif;padding:0 2px;border-radius:0 0 3px 0;text-shadow:0 0 3px rgba(255,255,255,.95),0 0 1px rgba(255,255,255,1)}
 /* Cage borders now rendered via SVG overlay - see drawConstraints() */
 
 /* Constraint badges */

@@ -232,7 +232,7 @@ const PUZZLES = [
   },
   { // Week 8 — original: Golden Pointers
     name:"Peach Blossom", week:8, type:"Arrow, Non-Consecutive, Consecutive",
-    desc:"A variant sudoku, hand-picked just for you.",
+    desc:"Arrows point to sums, dots forbid touch. Soft opener, mon amour.",
     reward:"Every petal was worth it, mon amour. 🌸",
     emoji:"✨",
     solution:mk9(()=>0), givens:mk9(()=>0),
@@ -241,7 +241,7 @@ const PUZZLES = [
   },
   { // Week 9 — original: Square Pairs
     name:"Cherry Kiss", week:9, type:"Sums, Exponents",
-    desc:"A variant sudoku, hand-picked just for you.",
+    desc:"Pairs on lines sum to perfect squares. A gentle math waltz.",
     reward:"One more sweet victory. 💋",
     emoji:"💫",
     solution:mk9(()=>0), givens:mk9(()=>0),
@@ -250,7 +250,7 @@ const PUZZLES = [
   },
   { // Week 10 — original: Echo of an Arrow
     name:"Rosy Cheeks", week:10, type:"Slingshot",
-    desc:"A variant sudoku, hand-picked just for you.",
+    desc:"Digits echo down the arrows they aim. Playful and elegant.",
     reward:"You keep glowing, princesse. ✨",
     emoji:"🌟",
     solution:mk9(()=>0), givens:mk9(()=>0),
@@ -259,7 +259,7 @@ const PUZZLES = [
   },
   { // Week 11 — original: The "Not So Simple" Miracle
     name:"Silk Ribbon", week:11, type:"Anti-Knight, Consecutive",
-    desc:"A variant sudoku, hand-picked just for you.",
+    desc:"Anti-knight moves plus consecutive dots. Trust the empty spaces.",
     reward:"Silk-smooth solving. 💖",
     emoji:"🌙",
     solution:mk9(()=>0), givens:mk9(()=>0),
@@ -268,7 +268,7 @@ const PUZZLES = [
   },
   { // Week 12 — original: Farrago
     name:"Velvet Rose", week:12, type:"Region Sum Lines, Non-Repeat",
-    desc:"A variant sudoku, hand-picked just for you.",
+    desc:"Line regions must sum equally. Balance is the whole game.",
     reward:"So elegant, my love. 🌹",
     emoji:"💎",
     solution:mk9(()=>0), givens:mk9(()=>0),
@@ -277,7 +277,7 @@ const PUZZLES = [
   },
   { // Week 13 — original: Pentomino Islands
     name:"Coral Bloom", week:13, type:"German Whispers",
-    desc:"A variant sudoku, hand-picked just for you.",
+    desc:"Green whispers alternate low ↔ high. Your comfort zone, ma reine.",
     reward:"You bloomed through it. 🌺",
     emoji:"👑",
     solution:mk9(()=>0), givens:mk9(()=>0),
@@ -286,7 +286,7 @@ const PUZZLES = [
   },
   { // Week 14 — original: Archipelago
     name:"Sunset Bloom", week:14, type:"Nurikabe, Multiplication, Sums",
-    desc:"A variant sudoku, hand-picked just for you.",
+    desc:"Nurikabe islands + killer sums. Two puzzles kissing on the grid.",
     reward:"Golden hour just for you. 🌅",
     emoji:"💋",
     solution:mk9(()=>0), givens:mk9(()=>0),
@@ -295,7 +295,7 @@ const PUZZLES = [
   },
   { // Week 15 — original: Fractured Symmetry
     name:"Firefly Glow", week:15, type:"Palindrome, German Whispers, Little Killer",
-    desc:"A variant sudoku, hand-picked just for you.",
+    desc:"Palindromes + whispers + little killers. Multi-layered like satin.",
     reward:"Bright as always. 🌟",
     emoji:"🎀",
     solution:mk9(()=>0), givens:mk9(()=>0),
@@ -304,7 +304,7 @@ const PUZZLES = [
   },
   { // Week 16 — original: Ornithologically Adjacent Ratios
     name:"Pearl Necklace", week:16, type:"Ratio, Consecutive, Incomplete Clues",
-    desc:"A variant sudoku, hand-picked just for you.",
+    desc:"Kropki ratios and consecutive dots — but not all shown. Deduce the missing.",
     reward:"Precious and yours. 💎",
     emoji:"💖",
     solution:mk9(()=>0), givens:mk9(()=>0),
@@ -313,7 +313,7 @@ const PUZZLES = [
   },
   { // Week 17 — original: Delta Line
     name:"Ember Sky", week:17, type:"Region Sum Lines, Chinese Whispers, Multitask Clues",
-    desc:"A variant sudoku, hand-picked just for you.",
+    desc:"Region sums, chinese whispers, layered clues. A slow burn.",
     reward:"Warm and unstoppable. 🔥",
     emoji:"💗",
     solution:mk9(()=>0), givens:mk9(()=>0),
@@ -322,7 +322,7 @@ const PUZZLES = [
   },
   { // Week 18 — original: Japanese Festival
     name:"Ruby Slippers", week:18, type:"Japanese Sums, XV",
-    desc:"A variant sudoku, hand-picked just for you.",
+    desc:"Japanese sums from the borders + V/X pairs inside. A dance of two.",
     reward:"One step closer, ma reine. 👠",
     emoji:"💕",
     solution:mk9(()=>0), givens:mk9(()=>0),
@@ -331,7 +331,7 @@ const PUZZLES = [
   },
   { // Week 19 — original: Horsing Around
     name:"Amber Waltz", week:19, type:"Fog, Knight\'s Move, Digit Restriction",
-    desc:"A variant sudoku, hand-picked just for you.",
+    desc:"Fog reveals as you place — knight moves guide the reveal.",
     reward:"Dancing through every clue. 💃",
     emoji:"💓",
     solution:mk9(()=>0), givens:mk9(()=>0),
@@ -340,7 +340,7 @@ const PUZZLES = [
   },
   { // Week 20 — original: Counting to 7
     name:"Cotton Candy", week:20, type:"Renban, Numbered Rooms",
-    desc:"A variant sudoku, hand-picked just for you.",
+    desc:"Renbans (consecutive runs) + numbered rooms peeking in.",
     reward:"Soft, sweet, victorious. 🍬",
     emoji:"🌸",
     solution:mk9(()=>0), givens:mk9(()=>0),
@@ -349,7 +349,7 @@ const PUZZLES = [
   },
   { // Week 21 — original: Cookie Crime Part 2: Connecting Clues
     name:"Blush Petals", week:21, type:"Fog, German Whispers, Between Lines",
-    desc:"A variant sudoku, hand-picked just for you.",
+    desc:"Fog + whispers + between-lines. Uncover the story cell by cell.",
     reward:"Blushing pride, well earned. 🌸",
     emoji:"🌷",
     solution:mk9(()=>0), givens:mk9(()=>0),
@@ -358,7 +358,7 @@ const PUZZLES = [
   },
   { // Week 22 — original: More Powerful Than Hate
     name:"Honey Moon", week:22, type:"Entropic Lines, Renban, Parity Lines",
-    desc:"A variant sudoku, hand-picked just for you.",
+    desc:"Entropic lines cycle {low, mid, high} + renban + parity. Symphonic.",
     reward:"Sweet as honey. 🍯",
     emoji:"🌹",
     solution:mk9(()=>0), givens:mk9(()=>0),
@@ -367,7 +367,7 @@ const PUZZLES = [
   },
   { // Week 23 — original: Hearts and Flowers
     name:"Golden Hour", week:23, type:"Anti-XV, Neighbour Sums, German Whispers",
-    desc:"A variant sudoku, hand-picked just for you.",
+    desc:"Anti-XV (no 5s at edges), neighbour sums, whispers. Deep and warm.",
     reward:"You light every hour. ✨",
     emoji:"🌺",
     solution:mk9(()=>0), givens:mk9(()=>0),
@@ -376,7 +376,7 @@ const PUZZLES = [
   },
   { // Week 24 — original: Big Zs
     name:"Berry Kisses", week:24, type:"Fog, Multi-Digit Arrow, XV",
-    desc:"A variant sudoku, hand-picked just for you.",
+    desc:"Fog with multi-digit arrows. Every solve is a reveal.",
     reward:"Kisses on every digit. 💋",
     emoji:"✨",
     solution:mk9(()=>0), givens:mk9(()=>0),
@@ -385,7 +385,7 @@ const PUZZLES = [
   },
   { // Week 25 — original: Forcing
     name:"Moonlit Vow", week:25, type:"Chaos Construction, Cave Count, Extra Regions",
-    desc:"A variant sudoku, hand-picked just for you.",
+    desc:"Chaos construction — you draw the regions yourself. A creator\'s puzzle.",
     reward:"By moonlight you shine. 🌙",
     emoji:"💫",
     solution:mk9(()=>0), givens:mk9(()=>0),
@@ -394,7 +394,7 @@ const PUZZLES = [
   },
   { // Week 26 — original: Numbered Rooms Sudoku
     name:"Aurora Bloom", week:26, type:"Numbered Rooms",
-    desc:"A variant sudoku, hand-picked just for you.",
+    desc:"Numbered rooms — clues outside guide what\'s inside. Poetic.",
     reward:"You woke the aurora. 🌌",
     emoji:"🌟",
     solution:mk9(()=>0), givens:mk9(()=>0),
@@ -833,7 +833,16 @@ function spOnFreePlaySolved(elapsedSec, moves){
   state.freePlay.totalSolved = (state.freePlay.totalSolved || 0) + 1;
   save();
   // Mini celebration: send Maxime a notification + visual
-  try { sendToMaxime('Celina solved a free-play puzzle', `Puzzle: ${freeplayCurrent && freeplayCurrent.id}\nTime: ${fmtTimeLong(elapsed)}\nTotal free-play solves: ${state.freePlay.totalSolved}`); } catch(e){}
+  // Debounce free-play push to Maxime — max one every 30 min so a solving session doesn't buzz his phone 10 times.
+  try {
+    const now = Date.now();
+    const lastNotify = (state.freePlay && state.freePlay.lastNotifyAt) || 0;
+    if (now - lastNotify > 30 * 60 * 1000) {
+      sendToMaxime('Celina solved a free-play puzzle', `Puzzle: ${freeplayCurrent && freeplayCurrent.id}\nTime: ${fmtTimeLong(elapsed)}\nTotal free-play solves: ${state.freePlay.totalSolved}`);
+      state.freePlay.lastNotifyAt = now;
+      save();
+    }
+  } catch(e){}
   const fpId = (freeplayCurrent && freeplayCurrent.id) || 'free play';
   setTimeout(()=>{
     spReturnToHub();
@@ -1031,21 +1040,57 @@ function renderAdminWishlist(){
         </div>`).join('')}
     </div>`;
 
+  const statusBadge = w => {
+    if (!w.status) return '';
+    const map = {
+      seen: {emoji:'👁', label:'Seen', cls:'wa-seen'},
+      loved: {emoji:'💗', label:'Loved', cls:'wa-loved'},
+      onway: {emoji:'🎁', label:'On its way', cls:'wa-onway'},
+    };
+    const s = map[w.status]; if (!s) return '';
+    return `<span class="wish-ack-badge ${s.cls}">${s.emoji} ${s.label}${w.statusAt?' · '+relativeAgo(w.statusAt):''}</span>`;
+  };
+
   const listHtml = `
     <div class="wish-history-title">Recent wishes</div>
     <div class="wish-history">
-      ${wl.slice(0, 30).map(w => `
-        <div class="wish-history-row">
+      ${wl.slice(0, 30).map((w, idx) => `
+        <div class="wish-history-row" data-widx="${idx}">
           <span class="wish-history-emoji">${w.categoryEmoji||'🎁'}</span>
           <div class="wish-history-body">
-            <div class="wish-history-cat">${_esc(w.categoryLabel||'Surprise')}${w.context && w.context.name ? ` <span class="wish-history-ctx">· ${_esc(w.context.name)}</span>` : ''}</div>
+            <div class="wish-history-cat">${_esc(w.categoryLabel||'Surprise')}${w.count && w.count > 1 ? ` <span class="wish-history-ctx">·  x${w.count}</span>` : ''}${w.context && w.context.name ? ` <span class="wish-history-ctx">· ${_esc(w.context.name)}</span>` : ''}</div>
             ${w.note ? `<div class="wish-history-note">"${_esc(w.note)}"</div>` : ''}
+            ${statusBadge(w)}
+            <div class="wish-ack-actions">
+              <button class="wish-ack-btn" data-status="seen" data-idx="${idx}" title="Seen">👁</button>
+              <button class="wish-ack-btn" data-status="loved" data-idx="${idx}" title="Loved">💗</button>
+              <button class="wish-ack-btn" data-status="onway" data-idx="${idx}" title="On its way">🎁</button>
+            </div>
           </div>
           <span class="wish-history-ago">${relativeAgo(w.at)}</span>
         </div>`).join('')}
     </div>`;
 
   container.innerHTML = summaryHtml + chartHtml + listHtml;
+
+  // Wire up ack buttons
+  container.querySelectorAll('.wish-ack-btn').forEach(btn => {
+    btn.addEventListener('click', () => ackWish(parseInt(btn.dataset.idx, 10), btn.dataset.status));
+  });
+}
+
+function ackWish(idx, status) {
+  if (!state.wishlist || !state.wishlist[idx]) return;
+  const w = state.wishlist[idx];
+  w.status = status;
+  w.statusAt = Date.now();
+  save();
+  const labels = { seen: 'Maxime saw your wish', loved: 'Maxime loved your wish', onway: 'Your gift is on its way' };
+  const emojis = { seen: '👁', loved: '💗', onway: '🎁' };
+  const body = `${emojis[status]} ${w.categoryEmoji||'🎁'} ${w.categoryLabel||'Surprise'}${w.note ? ' — "' + w.note + '"' : ''}`;
+  try { sendToCelina(labels[status] || 'Wish acknowledged', body); } catch(e){}
+  try { showToast('Notified Celina 💌', 1600); } catch(e){}
+  renderAdminWishlist();
 }
 
 function openWeekEdit(idx){
@@ -1626,8 +1671,9 @@ function initHub(){
     if(st==='available' || st==='completed' || debugMode) openGame(w);
     else ellaSay("Not yet, meow! Wait for the unlock~");
   });
-  // Debug: tap title 7x
-  document.getElementById('hub-title').addEventListener('click',()=>{
+  // Debug: 7-tap the tiny "Made with love" footer (never her name — she used to play-tap her own title)
+  const _dbgTarget = document.querySelector('.hub-footer');
+  if (_dbgTarget) _dbgTarget.addEventListener('click',()=>{
     debugTaps++;clearTimeout(debugTimer);debugTimer=setTimeout(()=>{debugTaps=0;},2000);
     if(debugTaps>=7){debugMode=true;debugTaps=0;ellaSay("Debug! All unlocked~");updateHub();}
   });
@@ -1676,7 +1722,7 @@ function openSetupModal(){
   const rows = document.getElementById('setup-rows');
   rows.innerHTML = '';
   for (let i = 0; i < 4; i++) {
-    const pz = PUZZLES[i];
+    const pz = getWeek(i);
     const row = document.createElement('div');
     row.className = 'setup-row';
     row.innerHTML = `
@@ -1849,6 +1895,16 @@ function renderHubWeeks(){
 function updateHub(){
   // Re-render cards in case admin added/removed weeks
   renderHubWeeks();
+  // Compute the most-recently-unlocked & unplayed week — for the NEW badge.
+  const _totalW = (state.weeks && state.weeks.length) || PUZZLES.length;
+  let _newestIdx = -1, _newestTs = 0;
+  for (let _i = 0; _i < _totalW; _i++) {
+    if (!state.puzzles[_i] || state.puzzles[_i].done) continue;
+    if (puzzleStatus(_i) !== 'available') continue;
+    if (state.puzzles[_i].startedAt) continue;
+    const _t = unlockDate(_i).getTime();
+    if (_t > _newestTs) { _newestTs = _t; _newestIdx = _i; }
+  }
   document.querySelectorAll('.puzzle-card').forEach((card,i)=>{
     // Free play card doesn't track week status — skip the per-week update
     if(card.classList.contains('freeplay-card')) return;
@@ -1856,6 +1912,7 @@ function updateHub(){
     // Re-trigger card animation
     card.style.animation='none';void card.offsetHeight;card.style.animation='';
     card.className='puzzle-card '+st;
+    if (i === _newestIdx) card.classList.add('is-new');
     const se=document.getElementById('status-'+i);
     if(st==='completed'){
       const bt=bestTimes['w'+i];
@@ -1871,6 +1928,8 @@ function updateHub(){
         card.classList.add('in-progress');
         const ago = relativeAgo(lastPlayed || startedAt);
         se.innerHTML = `Resume <span class="best-time">${ago}</span>`;
+      } else if (i === _newestIdx) {
+        se.innerHTML = `<span class="new-dot"></span>NEW · ${relativeAgo(unlockDate(i).getTime())}`;
       } else {
         se.textContent = 'Play now';
       }
@@ -1884,7 +1943,7 @@ function updateHub(){
     // Difficulty stars \u2014 week index + 1, capped at 4 (Week 1 = 1 star, Week 4 = 4 stars)
     let dsEl=card.querySelector('.card-diff');
     if(!dsEl){dsEl=document.createElement('div');dsEl.className='card-diff';card.querySelector('.card-type').after(dsEl);}
-    const diffLevel=Math.max(1,Math.min(4,i+1));
+    const diffLevel = i < 4 ? (i+1) : (2 + ((i * 7919) % 3)); // W1-4 = 1-4 stars; W5+ = 2-4 stars deterministic per week
     let stars='';for(let d=0;d<4;d++)stars+=`<span class="diff-star${d<diffLevel?' on':''}">\u2605</span>`;
     dsEl.innerHTML=stars;
   });
@@ -1899,7 +1958,52 @@ function updateHub(){
   const totalWeeks = (state.weeks && state.weeks.length) || PUZZLES.length;
   if(pf) pf.style.width=Math.round(doneCount/totalWeeks*100)+'%';
   if(pt) pt.textContent=doneCount+' / '+totalWeeks;
-  // Hub desc stays static ("Four puzzles. One reward.")
+
+  // Next-unlock chip — tells her when to come back
+  let _nextLockedIdx = -1;
+  for (let _i = 0; _i < _totalW; _i++) { if (puzzleStatus(_i) === 'locked') { _nextLockedIdx = _i; break; } }
+  let _nextChip = document.getElementById('hub-next-unlock');
+  if (!_nextChip) {
+    _nextChip = document.createElement('div');
+    _nextChip.id = 'hub-next-unlock';
+    _nextChip.className = 'hub-next-unlock';
+    const _container = document.getElementById('puzzle-cards') || document.querySelector('.hub-scroll');
+    if (_container) _container.appendChild(_nextChip);
+  }
+  if (_nextLockedIdx >= 0 && _nextChip) {
+    const _delta = unlockDate(_nextLockedIdx).getTime() - Date.now();
+    const _dm = 864e5;
+    let _label;
+    if (_delta < _dm) _label = `<span class="chip-ico">\u29D7</span> Next puzzle in ${Math.max(1, Math.round(_delta / 3600e3))}h`;
+    else if (_delta < 2 * _dm) _label = `<span class="chip-ico">\u29D7</span> Next puzzle tomorrow`;
+    else _label = `<span class="chip-ico">\u29D7</span> Next puzzle in ${Math.round(_delta / _dm)} days`;
+    _nextChip.innerHTML = _label;
+    _nextChip.style.display = '';
+  } else if (_nextChip) {
+    _nextChip.style.display = 'none';
+  }
+
+  // Softer hub description — reframe as cadence, not backlog
+  const _descEl = document.querySelector('.hub-desc');
+  if (_descEl) {
+    if (doneCount >= totalWeeks) _descEl.textContent = 'Every puzzle solved, ma reine. Legend.';
+    else if (doneCount === 0) _descEl.textContent = 'Your first puzzle is waiting. \uD83C\uDF38';
+    else _descEl.innerHTML = `${doneCount} solved &middot; ${totalWeeks - doneCount} to bloom`;
+  }
+
+  // Auto-scroll NEW card into view on first render after unlock
+  if (_newestIdx >= 0) {
+    const _sk = 'celina-seen-week';
+    const _seen = parseInt(localStorage.getItem(_sk) || '-1', 10);
+    if (_newestIdx > _seen) {
+      try {
+        const _c = document.querySelector('.puzzle-card[data-week="' + _newestIdx + '"]');
+        if (_c) setTimeout(() => { try { _c.scrollIntoView({ behavior: 'smooth', block: 'center' }); } catch(e){} }, 500);
+        localStorage.setItem(_sk, String(_newestIdx));
+      } catch(e){}
+    }
+  }
+
   // Days since first visit
   const footerEl=document.querySelector('.hub-footer');
   if(footerEl&&state.firstVisit){
@@ -1910,15 +2014,21 @@ function updateHub(){
   checkNewPuzzleNotify();
 }
 
-function puzzleStatus(i){if(state.puzzles[i].done)return'completed';return new Date()>=unlockDate(i)?'available':'locked';}
+function puzzleStatus(i){
+  const p = state.puzzles[i];
+  if(!p) return 'locked';
+  if(p.done) return 'completed';
+  return new Date()>=unlockDate(i)?'available':'locked';
+}
 
 // Check for newly unlocked puzzles and notify Celina
 function checkNewPuzzleNotify(){
   const notifiedKey='celina-notified-weeks';
   const notified=JSON.parse(localStorage.getItem(notifiedKey)||'[]');
-  for(let i=0;i<PUZZLES.length;i++){
-    if(puzzleStatus(i)==='available'&&!state.puzzles[i].done&&!notified.includes(i)){
-      const pz=PUZZLES[i];
+  const total = (state.weeks || PUZZLES).length;
+  for(let i=0;i<total;i++){
+    if(puzzleStatus(i)==='available'&&state.puzzles[i]&&!state.puzzles[i].done&&!notified.includes(i)){
+      const pz=getWeek(i);
       sendToCelina(
         `New puzzle unlocked: ${pz.name}!`,
         `Hey princess!\n\nA new puzzle just unlocked for you:\n\n` +
@@ -1964,7 +2074,7 @@ document.addEventListener('DOMContentLoaded',()=>{
     document.getElementById('rules-modal').style.display='none';
   });
   document.getElementById('btn-rules-open').addEventListener('click',()=>{
-    if(curPuzzle) showRules(PUZZLES[curWeek].type);
+    if(curPuzzle) { const _pz = getWeek(curWeek); if (_pz) showRules(_pz.type); }
   });
 });
 
@@ -2139,7 +2249,7 @@ function openGame(wi){
   return;
   // (Below is the old built-in renderer path, no longer reachable.)
   // eslint-disable-next-line
-  const pz=PUZZLES[wi];
+  const pz=getWeek(wi);
   // Show rules first time
   const ruleKey='rules-seen-'+wi;
   if(!localStorage.getItem(ruleKey)){showRules(pz.type);localStorage.setItem(ruleKey,'1');}
@@ -2310,7 +2420,7 @@ window.addEventListener('message', (ev) => {
 });
 
 function mk9(fn){return Array.from({length:9},()=>Array.from({length:9},fn));}
-function isGiven(r,c){return PUZZLES[curWeek].givens[r][c]!==0;}
+function isGiven(r,c){const pz=getWeek(curWeek);return pz&&pz.givens&&pz.givens[r]&&pz.givens[r][c]!==0;}
 
 function togglePause(){
   gamePaused=!gamePaused;
@@ -2449,7 +2559,7 @@ function autoClearNotes(r,c,n){
     curPuzzle.notes[br+dr][bc+dc].delete(n);
   }
   // Also clear for anti-knight/anti-king constraints
-  const pz=PUZZLES[curWeek];
+  const pz=getWeek(curWeek);
   if(pz.knights){
     [[-2,-1],[-2,1],[-1,-2],[-1,2],[1,-2],[1,2],[2,-1],[2,1]].forEach(([dr,dc])=>{
       const nr=r+dr,nc=c+dc;
@@ -2665,7 +2775,7 @@ function restartPuzzle(){
   for(let r=0;r<9;r++)for(let c=0;c<9;c++)if(!isGiven(r,c)&&curPuzzle.user[r][c]>0)filled++;
   if(filled>3&&!confirm('Restart this puzzle? All progress will be lost.'))return;
   pushHist();
-  const pz=PUZZLES[curWeek];
+  const pz=getWeek(curWeek);
   curPuzzle.user=pz.givens.map(r=>[...r]);
   curPuzzle.notes=mk9(()=>new Set());delete curPuzzle.hintCells;
   mistakes=0;streak=0;elapsed=0;selectedNum=0;lastMilestone=0;digitFirstMode=false;
@@ -3166,7 +3276,7 @@ function drawConstraints(){
 
   for(let r=0;r<9;r++)for(let c=0;c<9;c++){const cell=cellGrid[r][c];cell._cageClasses=[];cell._cageLabel=null;}
 
-  const pz=PUZZLES[curWeek];
+  const pz=getWeek(curWeek);
   const activeTypes=new Set();
 
   // SVG defs
@@ -3440,7 +3550,7 @@ function buildConstraintLegend(types){
 function updateAntiZones(r,c){
   for(let rr=0;rr<9;rr++)for(let cc=0;cc<9;cc++){const cell=cellGrid[rr][cc];cell.classList.remove('knight-zone','king-zone');}
   if(!curPuzzle)return;
-  const pz=PUZZLES[curWeek];
+  const pz=getWeek(curWeek);
   if(pz.knights){
     [[-2,-1],[-2,1],[-1,-2],[-1,2],[1,-2],[1,2],[2,-1],[2,1]].forEach(([dr,dc])=>{
       const nr=r+dr,nc=c+dc;
@@ -3587,7 +3697,7 @@ function celebrate(){
     btEl.textContent=isBest?'New best!':fmtTimeLong(bestTimes[key]);
     if(isBest)btEl.classList.add('new-best');else btEl.classList.remove('new-best');
   }
-  const pz=PUZZLES[curWeek];
+  const pz = getWeek(curWeek) || { name: 'Week '+(curWeek+1), emoji: '\u2728', reward: 'Beautifully done, ma reine.' };
   const rw=document.getElementById('celeb-reward');
   // Star rating based on mistakes
   const stars=mistakes===0?3:mistakes<=2?2:1;
@@ -3596,7 +3706,7 @@ function celebrate(){
   let html=`<div class="celeb-stars">${starsHtml}</div>`;
   // Flawless badge for zero-mistake runs
   if(mistakes===0) html+=`<div class="celeb-flawless">FLAWLESS!</div>`;
-  html+=`<strong>${pz.emoji} Week ${curWeek+1} Complete!</strong><p>${pz.reward}</p>`;
+  html+=`<strong>${pz.emoji||'\u2728'} Week ${curWeek+1} Complete!</strong><p>${pz.reward||'Beautifully done, ma reine.'}</p>`;
   const doneNow=state.puzzles.filter(p=>p.done).length;
   const isAllDone=doneNow>=4;
   if(isAllDone) html+=`<br><p style="font-weight:700;color:var(--pink-600)" class="celeb-all-done">\uD83C\uDF81 You conquered them ALL! Your reward awaits!</p>`;
@@ -3634,7 +3744,7 @@ function celebrate(){
 }
 
 function shareResult(){
-  const pz=PUZZLES[curWeek];
+  const pz = getWeek(curWeek) || { name: 'Week '+(curWeek+1) };
   const stars=mistakes===0?'⭐⭐⭐':mistakes<=2?'⭐⭐':'⭐';
   const hearts='❤️'.repeat(MAX_MISTAKES-mistakes)+'🤍'.repeat(mistakes);
   const text=`🌹 Celina's Puzzle Garden\nWeek ${curWeek+1}: ${pz.name}\n${stars} ${fmtTimeLong(elapsed)}\n${hearts}\n${mistakes===0?'✨ FLAWLESS! ✨':''}`;
@@ -3843,22 +3953,50 @@ function submitWish(){
   const note = noteEl ? (noteEl.value || '').trim() : '';
   const ctx = _wishContext || {};
   state.wishlist = state.wishlist || [];
-  state.wishlist.unshift({
-    category: cat.id, categoryLabel: cat.label, categoryEmoji: cat.emoji,
-    note, context: ctx, at: Date.now()
-  });
+  const now = Date.now();
+
+  // Dedup: if same category+note within 24h, bump count on the existing entry instead of adding a new one.
+  const DAY = 24 * 60 * 60 * 1000;
+  const dupIdx = state.wishlist.findIndex(w =>
+    w.category === cat.id &&
+    (w.note || '').trim() === note &&
+    (now - w.at) < DAY
+  );
+  let merged = false;
+  if (dupIdx >= 0) {
+    const w = state.wishlist[dupIdx];
+    w.count = (w.count || 1) + 1;
+    w.at = now;
+    // Move to top
+    state.wishlist.splice(dupIdx, 1);
+    state.wishlist.unshift(w);
+    merged = true;
+  } else {
+    state.wishlist.unshift({
+      category: cat.id, categoryLabel: cat.label, categoryEmoji: cat.emoji,
+      note, context: ctx, at: now, count: 1
+    });
+  }
   if (state.wishlist.length > 200) state.wishlist.length = 200;
   save();
-  const noteLine = note ? `\nHint: "${note}"\n` : '';
-  const where = ctx.name ? ` after solving ${ctx.name}` : '';
-  try {
-    sendToMaxime(
-      `Celina left a wish: ${cat.emoji} ${cat.label}`,
-      `Hey Maxime!\n\nCelina just made a wish${where}:\n\n${cat.emoji} ${cat.label}${noteLine}\n— Ella the cat`
-    );
-  } catch(e){ console.warn('wish notify failed', e); }
+
+  // Only push to Maxime if not a merge (or if last push was >6h ago) — avoid buzzing him twice for the same wish
+  const lastPushKey = 'celina-last-wish-push';
+  const lastPush = parseInt(localStorage.getItem(lastPushKey) || '0', 10);
+  const shouldPush = !merged || (now - lastPush > 6 * 60 * 60 * 1000);
+  if (shouldPush) {
+    const noteLine = note ? `\nHint: "${note}"\n` : '';
+    const where = ctx.name ? ` after solving ${ctx.name}` : '';
+    try {
+      sendToMaxime(
+        `Celina left a wish: ${cat.emoji} ${cat.label}`,
+        `Hey Maxime!\n\nCelina just made a wish${where}:\n\n${cat.emoji} ${cat.label}${noteLine}\n— Ella the cat`
+      );
+      try { localStorage.setItem(lastPushKey, String(now)); } catch(e){}
+    } catch(e){ console.warn('wish notify failed', e); }
+  }
   closeWishPrompt();
-  try { showToast('Sent to Maxime 💌', 2200); } catch(e){}
+  try { showToast(merged ? 'Noted 💌' : 'Sent to Maxime 💌', 2000); } catch(e){}
 }
 
 // ============== GIFTS ==============
@@ -4110,7 +4248,7 @@ function animateStatCounters(){
 // ============== CONSTRAINT SATISFACTION CHECK ==============
 function checkConstraintSatisfaction(){
   if(!curPuzzle)return;
-  const pz=PUZZLES[curWeek];
+  const pz=getWeek(curWeek);
   const g=curPuzzle.user;
   const cs=50;
   let newlyCompleted=0;
@@ -4937,10 +5075,17 @@ document.addEventListener('visibilitychange',()=>{
   }
 });
 
-// Save on page close/navigate — critical last-resort persistence
-window.addEventListener('beforeunload',()=>{
-  if(curWeek>=0&&curPuzzle&&document.getElementById('game').classList.contains('active'))saveProgress();
-});
+// Save on page close/navigate — critical last-resort persistence.
+// beforeunload doesn't fire on iOS Safari when she backgrounds via home swipe,
+// so ALSO listen on pagehide + visibilitychange.
+function _saveAll() {
+  try { if (curWeek >= 0 && curPuzzle && document.getElementById('game').classList.contains('active')) saveProgress(); } catch(e){}
+  try { save(); } catch(e){}
+  try { saveStats(); } catch(e){}
+}
+window.addEventListener('beforeunload', _saveAll);
+window.addEventListener('pagehide', _saveAll);
+document.addEventListener('visibilitychange', () => { if (document.hidden) _saveAll(); });
 
 // ============== SERVICE WORKER + AUTO-REFRESH ON UPDATE ==============
 // When a new SW takes control we force a single page reload so the user sees
