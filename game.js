@@ -816,7 +816,7 @@ async function openFreePlayEmbed(urlOrId){
 }
 
 // Called by spOnSolved when curWeek === -1
-function spOnFreePlaySolved(elapsedSec, moves){
+function spOnFreePlaySolved(elapsedSec, moves, puzzleTitle){
   const elapsed = elapsedSec || (freeplayCurrent ? Math.round((Date.now()-freeplayCurrent.startedAt)/1000) : 0);
   const mv = (typeof moves === 'number' && moves > 0) ? moves : 0;
   if (mv) { stats.totalMoves += mv; saveStats(); }
@@ -824,6 +824,7 @@ function spOnFreePlaySolved(elapsedSec, moves){
   state.freePlay.history.unshift({
     id: (freeplayCurrent && freeplayCurrent.id) || 'unknown',
     raw: (freeplayCurrent && freeplayCurrent.raw) || '',
+    title: (puzzleTitle || '').trim(),
     elapsedSec: elapsed,
     moves: mv,
     solvedAt: Date.now()
@@ -993,7 +994,7 @@ function renderAdminFreePlay(){
     const row = document.createElement('div');
     row.className = 'admin-fp-row';
     row.innerHTML = `
-      <div class="admin-fp-title" title="${_esc(entry.raw||entry.id)}">${_esc(entry.id)}</div>
+      <div class="admin-fp-title" title="${_esc(entry.raw||entry.id)}">${_esc(entry.title || entry.id)}</div>
       <div class="admin-fp-time">${fmtTimeLong(entry.elapsedSec || 0)}</div>
       <div class="admin-fp-when">${relativeAgo(entry.solvedAt)}</div>
     `;
@@ -1842,7 +1843,7 @@ function buildStatsView(){
     <div class="fp-recent">
       ${fp.recent.map(h=>`
         <div class="fp-recent-row">
-          <span class="fp-recent-id">${_esc((h.id||'puzzle').slice(0,16))}</span>
+          <span class="fp-recent-id">${_esc((h.title && h.title.length ? h.title : (h.id || 'puzzle')).slice(0, 24))}</span>
           ${h.moves?`<span class="fp-recent-moves">${h.moves} moves</span>`:''}
           <span class="fp-recent-time">${fmtTime(h.elapsedSec)}</span>
           <span class="fp-recent-ago">${relativeAgo(h.solvedAt)}</span>
@@ -2351,10 +2352,10 @@ function spReturnToHub(){
   updateHub && updateHub();
 }
 
-function spOnSolved(elapsedSec, moves){
+function spOnSolved(elapsedSec, moves, puzzleTitle){
   // Free play (curWeek === -1): record into the free-play history, no week credit
   if (curWeek === -1) {
-    spOnFreePlaySolved(elapsedSec, moves);
+    spOnFreePlaySolved(elapsedSec, moves, puzzleTitle);
     return;
   }
   if (typeof moves === 'number' && moves > 0) { stats.totalMoves += moves; saveStats(); }
@@ -2415,7 +2416,7 @@ window.addEventListener('message', (ev) => {
   // Fold in taps that happened inside the puzzle iframe
   if (typeof d.taps === 'number' && d.taps > 0) { stats.taps += d.taps; saveStats(); }
   if (d.type === 'back')   spReturnToHub();
-  if (d.type === 'solved') spOnSolved(d.elapsedSec, d.moves);
+  if (d.type === 'solved') spOnSolved(d.elapsedSec, d.moves, d.puzzleTitle);
   // 'ready' currently ignored — we trust the iframe to render
 });
 

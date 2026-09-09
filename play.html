@@ -88,7 +88,8 @@
 			position: fixed;
 			top: env(safe-area-inset-top);
 			left: 0; right: 0;
-			padding: 4px 8px;
+			/* Vertical padding bumped to 12px so the buttons clear the Dynamic Island / notch tap zone on iPhone 14 Pro+ */
+			padding: 12px 12px 4px;
 			display: flex; align-items: center; justify-content: space-between;
 			pointer-events: none;
 			z-index: 10000;
@@ -747,6 +748,12 @@ if (!window.__noPuzzle && !window.__deferBundleLoad) {
 	}
 
 	bindTap(document.getElementById('embed-back'), () => {
+		// If she's mid-solve (has placed digits), ask before leaving so a stray tap doesn't lose the session.
+		// SudokuPad auto-saves progress, but the reassurance matters — one accidental swipe is soul-crushing mid-puzzle.
+		try {
+			const moves = getMoveCount();
+			if (moves > 2 && !confirm('Quitter le puzzle? Ta progression est sauvegardée.')) return;
+		} catch(e){}
 		try { if (typeof _wakeLock !== 'undefined' && _wakeLock) { _wakeLock.release(); _wakeLock = null; } } catch(e){}
 		post('back', { taps: puzzleTaps });
 		puzzleTaps = 0;
@@ -884,7 +891,13 @@ if (!window.__noPuzzle && !window.__deferBundleLoad) {
 			flash.classList.add('show');
 			setTimeout(() => flash.classList.remove('show'), 2200);
 		}
-		post('solved', { elapsedSec: elapsed, moves: getMoveCount(), taps: puzzleTaps });
+		// Read the puzzle's real title so free-play history can show it instead of a cryptic hash
+		let puzzleTitle = '';
+		try {
+			const sp = window.Framework && Framework.app && Framework.app.sourcePuzzle;
+			if (sp) puzzleTitle = String((sp.metadata && sp.metadata.title) || sp.title || '').trim();
+		} catch(e) {}
+		post('solved', { elapsedSec: elapsed, moves: getMoveCount(), taps: puzzleTaps, puzzleTitle });
 		puzzleTaps = 0;
 		try { if (_wakeLock) { _wakeLock.release(); _wakeLock = null; } } catch(e){}
 	}
@@ -990,14 +1003,21 @@ if (!window.__noPuzzle && !window.__deferBundleLoad) {
 	setTimeout(waitForFramework, 400);
 })();
 
-// Allow normal interaction (right-click / long-press) — some SudokuPad CSS sets
-// -webkit-touch-callout: none which trips users up.
-(function allowInteraction() {
+// Suppress iOS long-press copy/share callout ONLY on the puzzle interactive surface.
+// Rules-content still gets 'default' so she can copy rules if needed.
+(function suppressCallout() {
 	const s = document.createElement('style');
 	s.textContent = `
 		body, .game, .board, .grid, .cells, .controls, .controls-input button {
+			-webkit-touch-callout: none !important;
+			-webkit-tap-highlight-color: rgba(233,30,99,.15) !important;
+			-webkit-user-select: none !important;
+			user-select: none !important;
+		}
+		.rules-content, .rules-content * {
 			-webkit-touch-callout: default !important;
-			-webkit-tap-highlight-color: rgba(233,30,99,.2) !important;
+			-webkit-user-select: text !important;
+			user-select: text !important;
 		}
 	`;
 	document.head.appendChild(s);
