@@ -848,12 +848,24 @@ if (!window.__noPuzzle && !window.__deferBundleLoad) {
 	}
 
 	// Read the stored solution (81-digit string) from wherever SudokuPad stashed it.
+	// Handles three formats: sp.solution, sp.metadata.solution, and cage-embedded {v:'solution:...'}.
 	function readSolution(app) {
 		try {
 			const sp = app.sourcePuzzle || {};
 			const meta = sp.metadata || {};
-			return sp.solution || meta.solution || '';
-		} catch (e) { return ''; }
+			const direct = sp.solution || meta.solution;
+			if (direct && String(direct).length === 81) return String(direct);
+			// Fall back: scan the cage array for {v:'solution:...'} style
+			const cages = sp.cages || sp.ca || [];
+			for (const c of cages) {
+				const v = c && (c.v || c.value);
+				if (typeof v === 'string' && v.startsWith('solution:')) {
+					const s = v.slice(9);
+					if (s.length === 81) return s;
+				}
+			}
+		} catch (e) {}
+		return '';
 	}
 
 	// Read the current grid as an 81-char string of digits (0 = empty).
