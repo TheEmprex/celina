@@ -400,6 +400,159 @@ const PUZZLES = [
     solution:mk9(()=>0), givens:mk9(()=>0),
     cages:[], thermos:[], arrows:[], whispers:[], kropki:[],
     palindromes:[], renbans:[], dutchWhispers:[]
+  },
+  { // Week 27 — original: Wobbly Whispers
+    name:"Whispered Silk", week:27, type:"Difference, German Whispers, Kropki",
+    desc:"A weekly delight, mon amour.",
+    reward:"Whispered like silk, ma reine. 🎀",
+    emoji:"🎀",
+    solution:mk9(()=>0), givens:mk9(()=>0),
+    cages:[], thermos:[], arrows:[], whispers:[], kropki:[],
+    palindromes:[], renbans:[], dutchWhispers:[]
+  },
+  { // Week 28 — original: Difference of Opinion
+    name:"Moonstone", week:28, type:"Difference, Sequence, Inequality",
+    desc:"A weekly delight, mon amour.",
+    reward:"Cool and precious, like a moonstone. 🌙",
+    emoji:"🌙",
+    solution:mk9(()=>0), givens:mk9(()=>0),
+    cages:[], thermos:[], arrows:[], whispers:[], kropki:[],
+    palindromes:[], renbans:[], dutchWhispers:[]
+  },
+  { // Week 29 — original: Poison Arrows
+    name:"Petal Rain", week:29, type:"Arrow, Division",
+    desc:"A weekly delight, mon amour.",
+    reward:"Petals rained down. ✨",
+    emoji:"🌸",
+    solution:mk9(()=>0), givens:mk9(()=>0),
+    cages:[], thermos:[], arrows:[], whispers:[], kropki:[],
+    palindromes:[], renbans:[], dutchWhispers:[]
+  },
+  { // Week 30 — original: World Cup 2026: Kick Off!
+    name:"Champagne Kiss", week:30, type:"Fog, Cipher, Group Sums",
+    desc:"A weekly delight, mon amour.",
+    reward:"A toast, my love. 🥂",
+    emoji:"🥂",
+    solution:mk9(()=>0), givens:mk9(()=>0),
+    cages:[], thermos:[], arrows:[], whispers:[], kropki:[],
+    palindromes:[], renbans:[], dutchWhispers:[]
+  },
+  { // Week 31 — original: Even Distribution
+    name:"Rose Quartz", week:31, type:"Killer, Kropki, O/E",
+    desc:"A weekly delight, mon amour.",
+    reward:"Quartz-clear thinking. 💎",
+    emoji:"💎",
+    solution:mk9(()=>0), givens:mk9(()=>0),
+    cages:[], thermos:[], arrows:[], whispers:[], kropki:[],
+    palindromes:[], renbans:[], dutchWhispers:[]
+  },
+  { // Week 32 — original: Quadrants
+    name:"Ivory Lace", week:32, type:"Anti-Knight, Kropki, Anti-Kropki",
+    desc:"A weekly delight, mon amour.",
+    reward:"Delicate and perfect. 🎀",
+    emoji:"🌷",
+    solution:mk9(()=>0), givens:mk9(()=>0),
+    cages:[], thermos:[], arrows:[], whispers:[], kropki:[],
+    palindromes:[], renbans:[], dutchWhispers:[]
+  },
+  { // Week 33 — original: No, the Other Side
+    name:"Peony Bloom", week:33, type:"X-Sums",
+    desc:"A weekly delight, mon amour.",
+    reward:"You bloomed again. 🌸",
+    emoji:"🌺",
+    solution:mk9(()=>0), givens:mk9(()=>0),
+    cages:[], thermos:[], arrows:[], whispers:[], kropki:[],
+    palindromes:[], renbans:[], dutchWhispers:[]
+  },
+  { // Week 34 — original: Breadcrumbs
+    name:"Jasmine Night", week:34, type:"Windoku, Killer, Ratio",
+    desc:"A weekly delight, mon amour.",
+    reward:"Sweet night dance. 🌙",
+    emoji:"✨",
+    solution:mk9(()=>0), givens:mk9(()=>0),
+    cages:[], thermos:[], arrows:[], whispers:[], kropki:[],
+    palindromes:[], renbans:[], dutchWhispers:[]
+  },
+  { // Week 35 — original: Battleaxe
+    name:"Ballet Slippers", week:35, type:"Quadruple, Region Sum Lines",
+    desc:"A weekly delight, mon amour.",
+    reward:"Twirl through them all. 🩰",
+    emoji:"🩰",
+    solution:mk9(()=>0), givens:mk9(()=>0),
+    cages:[], thermos:[], arrows:[], whispers:[], kropki:[],
+    palindromes:[], renbans:[], dutchWhispers:[]
+  },
+  { // Week 36 — original: Outlier
+    name:"Vanilla Cloud", week:36, type:"Palindrome, Ratio, Anti-Ratio",
+    desc:"A weekly delight, mon amour.",
+    reward:"Soft, sweet, victorious. ☁️",
+    emoji:"☁️",
+    solution:mk9(()=>0), givens:mk9(()=>0),
+    cages:[], thermos:[], arrows:[], whispers:[], kropki:[],
+    palindromes:[], renbans:[], dutchWhispers:[]
+  },
+  { // Week 37 — original: Square Sprinkled Donuts
+    name:"Ruby Whisper", week:37, type:"Kropki, Anti-Kropki, XV",
+    desc:"A weekly delight, mon amour.",
+    reward:"Deep whispers heard. ❤️",
+    emoji:"❤️",
+    solution:mk9(()=>0), givens:mk9(()=>0),
+    cages:[], thermos:[], arrows:[], whispers:[], kropki:[],
+    palindromes:[], renbans:[], dutchWhispers:[]
+  },
+  { // Week 38 — original: My First Puzzle
+    name:"Cinnamon Dawn", week:38, type:"German Whispers, Kropki, Arrow",
+    desc:"A weekly delight, mon amour.",
+    reward:"A warm dawn, my love. 🌅",
+    emoji:"🌅",
+    solution:mk9(()=>0), givens:mk9(()=>0),
+    cages:[], thermos:[], arrows:[], whispers:[], kropki:[],
+    palindromes:[], renbans:[], dutchWhispers:[]
+  },
+  { // Week 39 — original: My Original Reality Show Entertainment
+    name:"Lilac Ribbon", week:39, type:"Kropki, German Whispers, Parity Lines",
+    desc:"A weekly delight, mon amour.",
+    reward:"Elegant and light. 💜",
+    emoji:"💜",
+    solution:mk9(()=>0), givens:mk9(()=>0),
+    cages:[], thermos:[], arrows:[], whispers:[], kropki:[],
+    palindromes:[], renbans:[], dutchWhispers:[]
+  },
+  { // Week 40 — original: Snarky Puppy - Xavi
+    name:"Opal Glow", week:40, type:"German Whispers, Cipher, XV",
+    desc:"A weekly delight, mon amour.",
+    reward:"You made it glow. 💫",
+    emoji:"💫",
+    solution:mk9(()=>0), givens:mk9(()=>0),
+    cages:[], thermos:[], arrows:[], whispers:[], kropki:[],
+    palindromes:[], renbans:[], dutchWhispers:[]
+  },
+  { // Week 41 — original: Battenburg Little Killer Sudoku
+    name:"Praline", week:41, type:"Battenburg, Little Killer",
+    desc:"A weekly delight, mon amour.",
+    reward:"Every one earned. 🍯",
+    emoji:"🍯",
+    solution:mk9(()=>0), givens:mk9(()=>0),
+    cages:[], thermos:[], arrows:[], whispers:[], kropki:[],
+    palindromes:[], renbans:[], dutchWhispers:[]
+  },
+  { // Week 42 — original: Entropic Toast
+    name:"Camellia", week:42, type:"Entropic Lines, Non-Repeat, Kropki",
+    desc:"A weekly delight, mon amour.",
+    reward:"Beautiful and bold. 🌺",
+    emoji:"🌹",
+    solution:mk9(()=>0), givens:mk9(()=>0),
+    cages:[], thermos:[], arrows:[], whispers:[], kropki:[],
+    palindromes:[], renbans:[], dutchWhispers:[]
+  },
+  { // Week 43 — original: Whispering Entropy
+    name:"Starburst", week:43, type:"Fog, German Whispers, Entropic Lines",
+    desc:"A weekly delight, mon amour.",
+    reward:"You shine on. 🌟",
+    emoji:"🌟",
+    solution:mk9(()=>0), givens:mk9(()=>0),
+    cages:[], thermos:[], arrows:[], whispers:[], kropki:[],
+    palindromes:[], renbans:[], dutchWhispers:[]
   }
 ];
 
@@ -413,7 +566,7 @@ const PUZZLES = [
 // (real solver-grade rendering, drag-select, smart pencil marks) instead of
 // the built-in renderer. Leave blank to fall back to the built-in board.
 // ==========================================================================
-const PUZZLE_URLS = ['celina-w1', 'celina-w2', 'celina-w3', 'celina-w4', 'celina-w5', 'celina-w6', 'celina-w7', 'celina-w8', 'celina-w9', 'celina-w10', 'celina-w11', 'celina-w12', 'celina-w13', 'celina-w14', 'celina-w15', 'celina-w16', 'celina-w17', 'celina-w18', 'celina-w19', 'celina-w20', 'celina-w21', 'celina-w22', 'celina-w23', 'celina-w24', 'celina-w25', 'celina-w26'];
+const PUZZLE_URLS = ['celina-w1', 'celina-w2', 'celina-w3', 'celina-w4', 'celina-w5', 'celina-w6', 'celina-w7', 'celina-w8', 'celina-w9', 'celina-w10', 'celina-w11', 'celina-w12', 'celina-w13', 'celina-w14', 'celina-w15', 'celina-w16', 'celina-w17', 'celina-w18', 'celina-w19', 'celina-w20', 'celina-w21', 'celina-w22', 'celina-w23', 'celina-w24', 'celina-w25', 'celina-w26', 'celina-w27', 'celina-w28', 'celina-w29', 'celina-w30', 'celina-w31', 'celina-w32', 'celina-w33', 'celina-w34', 'celina-w35', 'celina-w36', 'celina-w37', 'celina-w38', 'celina-w39', 'celina-w40', 'celina-w41', 'celina-w42', 'celina-w43'];
 // Already received \u2014 locked, ticked, shown at top
 const RECEIVED=[
   {name:"Van Cleef Necklace",brand:"Van Cleef & Arpels",emoji:"\uD83D\uDC8E"},

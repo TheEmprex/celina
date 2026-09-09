@@ -1,4 +1,4 @@
-const CACHE='celina-puzzle-v93-polish';
+const CACHE='celina-puzzle-v94-content-french';
 const ASSETS=['./','./index.html','./style.css','./game.js','./play.html','./manifest.json','./favicon.svg','./icon.svg'];
 
 self.addEventListener('install',e=>{
